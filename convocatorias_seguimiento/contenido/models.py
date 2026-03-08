@@ -222,6 +222,7 @@ class Beneficiarios(models.Model):
         return f"{self.beneficiario}"
     
 class ClasificacionIndicadorMGA(models.Model):
+    codigo_meta = models.CharField(max_length=5,null=True,blank=False)
     codigo_indicador = models.CharField(max_length=9)
     nombre_indicador = models.TextField()
     meta_indicador = models.DecimalField(max_digits=30, decimal_places=10)
