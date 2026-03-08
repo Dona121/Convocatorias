@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.contrib.humanize.templatetags.humanize import intcomma
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.admin import TabularInline
 from contenido import models
 from contenido import forms
+
 
 class BeneficiariosInline(TabularInline):
     model = models.Beneficiarios
@@ -41,12 +41,14 @@ class ResponsableAdmin(UnfoldModelAdmin):
 class ClasificacionAliadosAdmin(UnfoldModelAdmin):
     list_display = ("clasificacion_aliado",)
 
+
 @admin.register(models.Aliados)
 class AliadosAdmin(UnfoldModelAdmin):
     list_display = ("clasificacion","aliado", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("aliado",)
     ordering = ("aliado",)
     
+
 @admin.register(models.Segmentos)
 class SegmentosAdmin(UnfoldModelAdmin):
     list_display = ("segmento", "fecha_creacion", "fecha_actualizacion")
@@ -97,18 +99,50 @@ class VigenciaAdmin(UnfoldModelAdmin):
 
 @admin.register(models.ClasificacionIndicadorMGA)
 class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
-    list_display = ("codigo_meta", "codigo_indicador", "nombre_indicador",
-                    "medido_a_atraves_de","meta_cuatrienio","tipo_acumulacion","responsable",
-                    "meta_fisica_esperada_2024","meta_fisica_esperada_2025","meta_fisica_esperada_2026","meta_fisica_esperada_2027",)
+    list_display = (
+        "codigo_meta", 
+        "codigo_indicador", 
+        "nombre_indicador",
+        "medido_a_atraves_de",
+        "meta_del_cuatrienio",
+        "tipo_acumulacion",
+        "responsable",
+        "meta_fisica_esp_2024",
+        "meta_fisica_esp_2025",
+        "meta_fisica_esp_2026",
+        "meta_fisica_esp_2027",
+    )
     search_fields = ("codigo_indicador", "nombre_indicador","responsable","medido_a_atraves_de")
     ordering = ("codigo_meta",)
+
+    # --- Métodos de formato para Indicadores ---
+    @admin.display(description="Meta cuatrienio", ordering="meta_cuatrienio")
+    def meta_del_cuatrienio(self, obj):
+        return f"{obj.meta_cuatrienio:,.2f}" if obj.meta_cuatrienio is not None else "-"
+
+    @admin.display(description="Meta física esp. 2024", ordering="meta_fisica_esperada_2024")
+    def meta_fisica_esp_2024(self, obj):
+        return f"{obj.meta_fisica_esperada_2024:,.2f}" if obj.meta_fisica_esperada_2024 is not None else "-"
+
+    @admin.display(description="Meta física esp. 2025", ordering="meta_fisica_esperada_2025")
+    def meta_fisica_esp_2025(self, obj):
+        return f"{obj.meta_fisica_esperada_2025:,.2f}" if obj.meta_fisica_esperada_2025 is not None else "-"
+
+    @admin.display(description="Meta física esp. 2026", ordering="meta_fisica_esperada_2026")
+    def meta_fisica_esp_2026(self, obj):
+        return f"{obj.meta_fisica_esperada_2026:,.2f}" if obj.meta_fisica_esperada_2026 is not None else "-"
+
+    @admin.display(description="Meta física esp. 2027", ordering="meta_fisica_esperada_2027")
+    def meta_fisica_esp_2027(self, obj):
+        return f"{obj.meta_fisica_esperada_2027:,.2f}" if obj.meta_fisica_esperada_2027 is not None else "-"
+
 
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin):
     list_display = (
         "nombre_convocatoria",
         "estado",
-        "monto",
+        "monto_de_la_convocatoria", 
         "fecha_apertura",
         "fecha_cierre",
         "contacto",
@@ -122,7 +156,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             "fields": (
                 "nombre_convocatoria",
                 "estado",
-                "monto",
+                "monto", 
                 "contacto",
             )
         }),
@@ -141,6 +175,13 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
         }),
     )
 
+    # --- Método de formato para moneda (Convocatoria) ---
+    @admin.display(description="Monto de la convocatoria", ordering="monto")
+    def monto_de_la_convocatoria(self, obj):
+        if obj.monto is not None:
+            return f"${obj.monto:,.2f}"
+        return "-"
+
 
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
@@ -149,8 +190,8 @@ class ProyectoAdmin(UnfoldModelAdmin):
         "convocatoria",
         "dependencia",
         "responsable",
-        "valor_proyecto",
-        "monto_contrapartida",
+        "valor_del_proyecto",               
+        "monto_contrapartida_del_proyecto", 
         "bpin",
         "fecha_creacion",
     )
@@ -178,3 +219,16 @@ class ProyectoAdmin(UnfoldModelAdmin):
             "fields": ("municipios",)
         }),
     )
+
+    # --- Métodos de formato para moneda (Proyecto) ---
+    @admin.display(description="Valor del proyecto", ordering="valor_proyecto")
+    def valor_del_proyecto(self, obj):
+        if obj.valor_proyecto is not None:
+            return f"${obj.valor_proyecto:,.2f}"
+        return "-"
+
+    @admin.display(description="Monto contrapartida del proyecto", ordering="monto_contrapartida")
+    def monto_contrapartida_del_proyecto(self, obj):
+        if obj.monto_contrapartida is not None:
+            return f"${obj.monto_contrapartida:,.2f}"
+        return "-"
