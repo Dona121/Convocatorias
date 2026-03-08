@@ -248,6 +248,7 @@ class IndicadorMGA(models.Model):
         null=True,
         blank=False
     )
+    meta_proyecto = models.DecimalField(null=True,blank=False,decimal_places=5,max_digits=15)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
