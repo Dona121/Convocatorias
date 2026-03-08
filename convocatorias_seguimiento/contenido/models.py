@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 # Create your models here.
 
 class Dependencia(models.Model):
-    dependencia = models.CharField(max_length=40)
+    dependencia = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -16,7 +16,7 @@ class Dependencia(models.Model):
         return f"{self.dependencia}"
     
 class Responsable(models.Model):
-    responsable = models.CharField(max_length=40)
+    responsable = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -28,7 +28,7 @@ class Responsable(models.Model):
         return f"{self.responsable}"
     
 class Aliados(models.Model):
-    aliado = models.CharField(max_length=40)
+    aliado = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -40,7 +40,7 @@ class Aliados(models.Model):
         return f"{self.aliado}"
 
 class Segmentos(models.Model):
-    segmento = models.CharField(max_length=40)
+    segmento = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -54,7 +54,7 @@ class Segmentos(models.Model):
 
 class Sectores(models.Model):
     codigo_sector = models.CharField(max_length=2)
-    sector = models.CharField(max_length=40)
+    sector = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -67,7 +67,7 @@ class Sectores(models.Model):
 
 
 class Estado(models.Model):
-    estado = models.CharField(max_length=40)
+    estado = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -80,7 +80,7 @@ class Estado(models.Model):
 
 
 class Municipios(models.Model):
-    municipio = models.CharField(max_length=40)
+    municipio = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -93,7 +93,7 @@ class Municipios(models.Model):
 
     
 class Ubicacion(models.Model):
-    ubicacion = models.CharField(max_length=40)
+    ubicacion = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -233,9 +233,27 @@ class ClasificacionIndicadorMGA(models.Model):
         verbose_name_plural = "Indicadores"
 
     def __str__(self):
-        return f"{self.codigo_indicador} - {self.nombre_indicador}"  
+        return f"{self.codigo_indicador} - {self.nombre_indicador}"
+    
+class ClasificacionVigencia(models.Model):
+    vigencia = models.IntegerField(null=True,blank=False)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Vigencia"
+        verbose_name_plural = "Vigencias"
+
+    def __str__(self):
+        return f"{self.codigo_indicador} - {self.nombre_indicador}"
     
 class IndicadorMGA(models.Model):
+    vigencia = models.ForeignKey(
+        ClasificacionVigencia,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=False
+    )
     indicadores = models.ForeignKey(
         ClasificacionIndicadorMGA,
         on_delete=models.CASCADE,

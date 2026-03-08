@@ -89,6 +89,10 @@ class ClasificacionBeneficiarioAdmin(UnfoldModelAdmin):
     search_fields = ("tipo_beneficiario",)
     ordering = ("tipo_beneficiario",)
 
+@admin.register(models.ClasificacionVigencia)
+class VigenciaAdmin(UnfoldModelAdmin):
+    list_display = ("id","vigencia",)
+    search_fields = ("vigencia",)
 
 @admin.register(models.ClasificacionIndicadorMGA)
 class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
