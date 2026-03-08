@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
-* {
+body, p,
+span:not(.material-symbols-outlined):not([class*="material"]),
+a, td, th, label, input, select, textarea, button,
+h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif !important;
 }
 
@@ -10,7 +13,7 @@ body {
     color: #1a1a2e;
 }
 
-nav a, nav span {
+nav a, nav span:not(.material-symbols-outlined) {
     font-size: 13.5px;
     font-weight: 500;
     letter-spacing: 0.2px;
@@ -23,14 +26,12 @@ nav .text-xs {
     text-transform: uppercase;
 }
 
-
 th {
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
-
 
 td {
     font-size: 13.5px;
@@ -96,7 +97,6 @@ td {
     margin: 0;
 }
 
-
 .selector input[type="text"] {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 12.5px;
@@ -114,7 +114,6 @@ td {
     border-bottom-color: #6d28d9;
     background: #fdf9ff;
 }
-
 
 .selector .selector-chooser,
 .selector a.selector-chooseall,
@@ -137,7 +136,6 @@ td {
     background: #ede9fe;
 }
 
-
 .selector-chooser li button,
 .selector ul.selector-chooser li {
     background: #6d28d9;
@@ -154,7 +152,6 @@ td {
     background: transparent;
     list-style: none;
 }
-
 
 .selector ~ p {
     font-family: 'Montserrat', sans-serif !important;
