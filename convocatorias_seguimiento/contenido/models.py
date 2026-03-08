@@ -130,9 +130,9 @@ class Convocatorias(models.Model):
     )
     # 
     contacto = models.CharField(max_length=100)
-    que_ofrece = models.TextField()
-    quienes_pueden_participar = models.TextField()
-    publico_priorizado = models.TextField()
+    que_ofrece = models.TextField(null=True,blank=True)
+    quienes_pueden_participar = models.TextField(null=True,blank=True)
+    publico_priorizado = models.TextField(null=True,blank=True)
     
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -157,7 +157,7 @@ class Proyecto(models.Model):
     nombre_proyecto = models.TextField()
     valor_proyecto = models.DecimalField(max_digits=30, decimal_places=10)
     bpin = models.CharField(max_length=20)
-    monto_contrapartida = models.DecimalField(max_digits=30, decimal_places=10)
+    monto_contrapartida = models.DecimalField(max_digits=30, decimal_places=10,null=True,blank=True)
     dependencia = models.ForeignKey(
         Dependencia,
         on_delete=models.CASCADE,
