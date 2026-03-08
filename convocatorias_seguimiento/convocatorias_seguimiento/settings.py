@@ -15,6 +15,7 @@ import os
 import os
 import dj_database_url
 from pathlib import Path
+from django.templatetags.static import static
 
 # --- para unfold
 
@@ -167,6 +168,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 UNFOLD = {
+    "SITE_TITLE": "Convocatorias",
+    "SITE_HEADER": "Convocatorias",
+    "SITE_SYMBOL": "campaign", 
+    "STYLES": [
+        lambda request: static("css/custom_admin.css"),
+    ],
     "SIDEBAR": {
         "navigation": [
             {
