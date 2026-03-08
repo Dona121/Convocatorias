@@ -208,7 +208,7 @@ UNFOLD = {
                     },
                     {
                         "title": "Clasficación Aliados",
-                        "icon": "rectangle-stack",
+                        "icon": "bookmark",
                         "link": "/admin/contenido/clasificacionaliados/",
                     },
                     {
