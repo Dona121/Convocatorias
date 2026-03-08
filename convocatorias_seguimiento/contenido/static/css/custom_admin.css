@@ -1,22 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
-body, p,
-span:not(.material-symbols-outlined):not([class*="material"]),
-a, td, th, label, input, select, textarea, button,
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif !important;
-}
 
 body {
     font-size: 14px;
     line-height: 1.6;
     color: #1a1a2e;
-}
-
-nav a, nav span:not(.material-symbols-outlined) {
-    font-size: 13.5px;
-    font-weight: 500;
-    letter-spacing: 0.2px;
 }
 
 nav .text-xs {
@@ -38,7 +24,6 @@ td {
     font-weight: 400;
 }
 
-/* ─── Filter Horizontal ─────────────────────────────────── */
 
 .selector {
     display: flex;
@@ -49,7 +34,6 @@ td {
 .selector h2 {
     background: #6d28d9;
     color: white;
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.8px;
@@ -69,7 +53,6 @@ td {
 }
 
 .selector select {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 13px;
     padding: 6px 10px;
     border: none;
@@ -88,7 +71,6 @@ td {
 
 .selector p.help,
 .selector .helptext {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 11.5px;
     color: #6b7280;
     padding: 8px 12px;
@@ -98,7 +80,6 @@ td {
 }
 
 .selector input[type="text"] {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 12.5px;
     border: none;
     border-bottom: 1.5px solid #e5e7eb;
@@ -118,7 +99,6 @@ td {
 .selector .selector-chooser,
 .selector a.selector-chooseall,
 .selector a.selector-clearall {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 12px;
     font-weight: 600;
     display: block;
@@ -136,26 +116,89 @@ td {
     background: #ede9fe;
 }
 
-.selector-chooser li button,
-.selector ul.selector-chooser li {
-    background: #6d28d9;
-    border-radius: 6px;
-    margin: 3px 0;
-}
-
 .selector ul.selector-chooser {
     padding: 4px;
     display: flex;
     flex-direction: column;
     gap: 4px;
     justify-content: center;
+    align-items: center;
     background: transparent;
     list-style: none;
+    margin: 0;
+}
+
+.selector ul.selector-chooser li {
+    background: transparent;
+    margin: 2px 0;
+}
+
+.selector ul.selector-chooser li button {
+    background: #6d28d9;
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.selector ul.selector-chooser li button:hover {
+    background: #5b21b6;
 }
 
 .selector ~ p {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 11.5px;
     color: #9ca3af;
     margin-top: 6px;
+}
+
+.choices__inner {
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    background: #fafafa !important;
+    padding: 6px 10px !important;
+    font-size: 13.5px !important;
+}
+
+.choices__inner:focus-within {
+    border-color: #6d28d9 !important;
+    background: #fdf9ff !important;
+}
+
+
+.choices__item--selectable {
+    font-size: 13.5px;
+    color: #374151;
+}
+
+
+.choices__list--dropdown {
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 0 0 8px 8px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+    background: #fff !important;
+}
+
+
+.choices__list--dropdown .choices__item {
+    font-size: 13px;
+    color: #374151;
+    padding: 8px 12px;
+}
+
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background: #ede9fe !important;
+    color: #4c1d95 !important;
+}
+
+.choices__input {
+    font-size: 13px !important;
+    background: #f9fafb !important;
+    border-bottom: 1.5px solid #e5e7eb !important;
+    padding: 8px 12px !important;
 }

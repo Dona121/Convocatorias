@@ -1,22 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
-body, p,
-span:not(.material-symbols-outlined):not([class*="material"]),
-a, td, th, label, input, select, textarea, button,
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif !important;
-}
-
+/* Mejora legibilidad general */
 body {
     font-size: 14px;
     line-height: 1.6;
     color: #1a1a2e;
-}
-
-nav a, nav span:not(.material-symbols-outlined) {
-    font-size: 13.5px;
-    font-weight: 500;
-    letter-spacing: 0.2px;
 }
 
 nav .text-xs {
@@ -49,7 +35,6 @@ td {
 .selector h2 {
     background: #6d28d9;
     color: white;
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.8px;
@@ -69,7 +54,6 @@ td {
 }
 
 .selector select {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 13px;
     padding: 6px 10px;
     border: none;
@@ -88,7 +72,6 @@ td {
 
 .selector p.help,
 .selector .helptext {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 11.5px;
     color: #6b7280;
     padding: 8px 12px;
@@ -98,7 +81,6 @@ td {
 }
 
 .selector input[type="text"] {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 12.5px;
     border: none;
     border-bottom: 1.5px solid #e5e7eb;
@@ -118,7 +100,6 @@ td {
 .selector .selector-chooser,
 .selector a.selector-chooseall,
 .selector a.selector-clearall {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 12px;
     font-weight: 600;
     display: block;
@@ -154,7 +135,6 @@ td {
 }
 
 .selector ~ p {
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 11.5px;
     color: #9ca3af;
     margin-top: 6px;
