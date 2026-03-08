@@ -139,6 +139,7 @@ class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
 
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin):
+    form = forms.ConvocatoriasForm
     list_display = (
         "nombre_convocatoria",
         "estado",
@@ -175,7 +176,6 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
         }),
     )
 
-    # --- Método de formato para moneda (Convocatoria) ---
     @admin.display(description="Monto de la convocatoria", ordering="monto")
     def monto_de_la_convocatoria(self, obj):
         if obj.monto is not None:
@@ -185,6 +185,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
 
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
+    forms = forms.ProyectoForm
     list_display = (
         "nombre_proyecto",
         "convocatoria",
@@ -220,7 +221,7 @@ class ProyectoAdmin(UnfoldModelAdmin):
         }),
     )
 
-    # --- Métodos de formato para moneda (Proyecto) ---
+
     @admin.display(description="Valor del proyecto", ordering="valor_proyecto")
     def valor_del_proyecto(self, obj):
         if obj.valor_proyecto is not None:
