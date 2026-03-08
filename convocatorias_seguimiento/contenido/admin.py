@@ -94,10 +94,11 @@ class VigenciaAdmin(UnfoldModelAdmin):
 
 @admin.register(models.ClasificacionIndicadorMGA)
 class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
-    list_display = ("codigo_meta", "codigo_indicador", "nombre_indicador", "meta_indicador", "fecha_creacion")
-    search_fields = ("codigo_indicador", "nombre_indicador")
-    ordering = ("codigo_indicador",)
-
+    list_display = ("codigo_meta", "codigo_indicador", "nombre_indicador",
+                    "medido_a_atraves_de","meta_cuatrienio","tipo_acumulacion","responsable",
+                    "meta_fisica_esperada_2024","meta_fisica_esperada_2025","meta_fisica_esperada_2026","meta_fisica_esperada_2027",)
+    search_fields = ("codigo_indicador", "nombre_indicador","responsable","medido_a_atraves_de")
+    ordering = ("codigo_meta",)
 
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin):
