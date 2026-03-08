@@ -245,7 +245,7 @@ class ClasificacionVigencia(models.Model):
         verbose_name_plural = "Vigencias"
 
     def __str__(self):
-        return f"{self.codigo_indicador} - {self.nombre_indicador}"
+        return f"{self.vigencia}"
     
 class IndicadorMGA(models.Model):
     vigencia = models.ForeignKey(
