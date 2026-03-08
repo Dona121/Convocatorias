@@ -105,7 +105,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     list_display = (
         "nombre_convocatoria",
         "estado",
-        "monto_formateado",
+        "monto",
         "fecha_apertura",
         "fecha_cierre",
         "contacto",
@@ -138,10 +138,6 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
         }),
     )
 
-    @admin.display(description="monto", ordering="monto")
-    def monto_formateado(self, obj):
-        return f"${intcomma(round(obj.monto, 2)):,.2f}" if obj.monto is not None else "-"
-
 
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
@@ -150,8 +146,8 @@ class ProyectoAdmin(UnfoldModelAdmin):
         "convocatoria",
         "dependencia",
         "responsable",
-        "valor_proyecto_formateado",
-        "monto_contrapartida_formateado",
+        "valor_proyecto",
+        "monto_contrapartida",
         "bpin",
         "fecha_creacion",
     )
@@ -178,11 +174,3 @@ class ProyectoAdmin(UnfoldModelAdmin):
             "fields": ("municipios",)
         }),
     )
-
-    @admin.display(description="valor_proyecto", ordering="valor_proyecto")
-    def valor_proyecto_formateado(self, obj):
-        return f"${intcomma(round(obj.valor_proyecto, 2)):,.2f}" if obj.valor_proyecto is not None else "-"
-
-    @admin.display(description="monto_contrapartida", ordering="monto_contrapartida")
-    def monto_contrapartida_formateado(self, obj):
-        return f"${intcomma(round(obj.monto_contrapartida, 2)):,.2f}" if obj.monto_contrapartida is not None else "-"

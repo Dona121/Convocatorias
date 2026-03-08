@@ -111,8 +111,7 @@ class Convocatorias(models.Model):
     )
     segmento = models.ManyToManyField(
         Segmentos
-    )
-    # 
+    ) 
     fecha_apertura = models.DateTimeField()
     fecha_cierre = models.DateTimeField(null=True, blank=True)
     estado = models.ForeignKey(
@@ -128,7 +127,6 @@ class Convocatorias(models.Model):
     ubicacion = models.ManyToManyField(
         Ubicacion
     )
-    # 
     contacto = models.CharField(max_length=100)
     que_ofrece = models.TextField(null=True,blank=True)
     quienes_pueden_participar = models.TextField(null=True,blank=True)
@@ -208,7 +206,6 @@ class Beneficiarios(models.Model):
         null=True,
         blank=False
     )
-    # 
     numero_beneficiarios = models.IntegerField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
