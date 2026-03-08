@@ -234,7 +234,7 @@ class ClasificacionIndicadorMGA(models.Model):
         verbose_name_plural = "Indicadores"
 
     def __str__(self):
-        return f"{self.codigo_indicador} - {self.nombre_indicador}"
+        return f"{self.codigo_meta} - {self.codigo_indicador} - {self.nombre_indicador}"
     
 class ClasificacionVigencia(models.Model):
     vigencia = models.IntegerField(null=True,blank=False)
