@@ -37,13 +37,16 @@ class ResponsableAdmin(UnfoldModelAdmin):
     ordering = ("responsable",)
 
 
+@admin.register(models.ClasificacionAliados)
+class ClasificacionAliadosAdmin(UnfoldModelAdmin):
+    list_display = ("clasificacion_aliado",)
+
 @admin.register(models.Aliados)
 class AliadosAdmin(UnfoldModelAdmin):
-    list_display = ("aliado", "fecha_creacion", "fecha_actualizacion")
+    list_display = ("clasificacion","aliado", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("aliado",)
     ordering = ("aliado",)
-
-
+    
 @admin.register(models.Segmentos)
 class SegmentosAdmin(UnfoldModelAdmin):
     list_display = ("segmento", "fecha_creacion", "fecha_actualizacion")
@@ -151,6 +154,7 @@ class ProyectoAdmin(UnfoldModelAdmin):
         "bpin",
         "fecha_creacion",
     )
+    raw_id_fields = ("convocatoria",)
     list_filter = ("dependencia", "responsable", "convocatoria")
     search_fields = ("nombre_proyecto", "bpin")
     filter_horizontal = ("municipios",)

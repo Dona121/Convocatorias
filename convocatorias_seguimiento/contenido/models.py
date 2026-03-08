@@ -27,8 +27,26 @@ class Responsable(models.Model):
     def __str__(self):
         return f"{self.responsable}"
     
+class ClasificacionAliados(models.Model):
+    clasificacion_aliado = models.CharField(max_length=150)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Clasificacion Aliado"
+        verbose_name_plural = "Clasificacion Aliados"
+
+    def __str__(self):
+        return f"{self.clasificacion_aliado}"
+    
 class Aliados(models.Model):
-    aliado = models.CharField(max_length=100)
+    clasificacion = models.ForeignKey(
+        ClasificacionAliados,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    aliado = models.CharField(max_length=200)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
@@ -108,6 +126,9 @@ class Convocatorias(models.Model):
     nombre_convocatoria = models.TextField()
     dependencia = models.ManyToManyField(
         Dependencia
+    )
+    aliados = models.ManyToManyField(
+        Aliados
     )
     segmento = models.ManyToManyField(
         Segmentos

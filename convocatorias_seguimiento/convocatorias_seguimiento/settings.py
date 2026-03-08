@@ -207,6 +207,11 @@ UNFOLD = {
                         "link": "/admin/contenido/responsable/",
                     },
                     {
+                        "title": "Clasficación Aliados",
+                        "icon": "rectangle-stack",
+                        "link": "/admin/contenido/clasificacionaliados/",
+                    },
+                    {
                         "title": "Aliados",
                         "icon": "handshake",
                         "link": "/admin/contenido/aliados/",
