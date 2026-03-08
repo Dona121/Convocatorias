@@ -9,14 +9,12 @@ nav .text-xs {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 1px;
-    text-transform: uppercase;
 }
 
 th {
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    text-transform: uppercase;
 }
 
 td {
@@ -96,7 +94,6 @@ td {
     background: #fdf9ff;
 }
 
-.selector .selector-chooser,
 .selector a.selector-chooseall,
 .selector a.selector-clearall {
     font-size: 12px;
@@ -116,45 +113,12 @@ td {
     background: #ede9fe;
 }
 
-.selector ul.selector-chooser {
-    padding: 4px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    justify-content: center;
-    align-items: center;
-    background: transparent;
-    list-style: none;
-    margin: 0;
-}
-
-.selector ul.selector-chooser li {
-    background: transparent;
-    margin: 2px 0;
-}
-
-.selector ul.selector-chooser li button {
-    background: #6d28d9;
-    border: none;
-    border-radius: 6px;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-}
-
-.selector ul.selector-chooser li button:hover {
-    background: #5b21b6;
-}
-
 .selector ~ p {
     font-size: 11.5px;
     color: #9ca3af;
     margin-top: 6px;
 }
+
 
 .choices__inner {
     border: 1.5px solid #e5e7eb !important;
@@ -169,12 +133,10 @@ td {
     background: #fdf9ff !important;
 }
 
-
 .choices__item--selectable {
     font-size: 13.5px;
     color: #374151;
 }
-
 
 .choices__list--dropdown {
     border: 1.5px solid #e5e7eb !important;
@@ -183,13 +145,11 @@ td {
     background: #fff !important;
 }
 
-
 .choices__list--dropdown .choices__item {
     font-size: 13px;
     color: #374151;
     padding: 8px 12px;
 }
-
 
 .choices__list--dropdown .choices__item--selectable.is-highlighted {
     background: #ede9fe !important;
