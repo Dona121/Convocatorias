@@ -115,7 +115,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     )
     list_filter = ("estado", "segmento", "sectores")
     search_fields = ("nombre_convocatoria", "contacto", "que_ofrece")
-    filter_horizontal = ("sectores", "dependencia", "segmento", "ubicacion")
+    filter_horizontal = ("sectores", "aliados" ,"dependencia", "segmento", "ubicacion")
     ordering = ("-fecha_apertura",)
     fieldsets = (
         ("Información general", {
@@ -130,7 +130,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             "fields": ("fecha_apertura", "fecha_cierre")
         }),
         ("Clasificación", {
-            "fields": ("dependencia", "segmento", "sectores", "ubicacion")
+            "fields": ("aliados","dependencia", "segmento", "sectores", "ubicacion")
         }),
         ("Detalles", {
             "fields": (
