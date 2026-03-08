@@ -1,11 +1,9 @@
 from django.contrib import admin
+from django.contrib.humanize.templatetags.humanize import intcomma
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.admin import TabularInline
 from contenido import models
 from contenido import forms
-
-
-# ─── Inlines ────────────────────────────────────────────────────────────────
 
 class BeneficiariosInline(TabularInline):
     model = models.Beneficiarios
@@ -24,8 +22,6 @@ class IndicadoresInline(TabularInline):
     verbose_name = "Indicador MGA"
     verbose_name_plural = "Indicadores MGA"
 
-
-# Modelos simples ─────────────────────────────────────────────
 
 @admin.register(models.Dependencia)
 class DependenciaAdmin(UnfoldModelAdmin):
@@ -89,26 +85,26 @@ class ClasificacionBeneficiarioAdmin(UnfoldModelAdmin):
     search_fields = ("tipo_beneficiario",)
     ordering = ("tipo_beneficiario",)
 
+
 @admin.register(models.ClasificacionVigencia)
 class VigenciaAdmin(UnfoldModelAdmin):
-    list_display = ("id","vigencia",)
+    list_display = ("id", "vigencia",)
     search_fields = ("vigencia",)
+
 
 @admin.register(models.ClasificacionIndicadorMGA)
 class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
-    list_display = ("codigo_indicador", "nombre_indicador", "meta_indicador", "fecha_creacion")
+    list_display = ("codigo_meta", "codigo_indicador", "nombre_indicador", "meta_indicador", "fecha_creacion")
     search_fields = ("codigo_indicador", "nombre_indicador")
     ordering = ("codigo_indicador",)
 
-
-# ─── Modelos principales ─────────────────────────────────────────────────────
 
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin):
     list_display = (
         "nombre_convocatoria",
         "estado",
-        "monto",
+        "monto_formateado",
         "fecha_apertura",
         "fecha_cierre",
         "contacto",
@@ -141,6 +137,10 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
         }),
     )
 
+    @admin.display(description="monto", ordering="monto")
+    def monto_formateado(self, obj):
+        return f"${intcomma(round(obj.monto, 2)):,.2f}" if obj.monto is not None else "-"
+
 
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
@@ -149,8 +149,8 @@ class ProyectoAdmin(UnfoldModelAdmin):
         "convocatoria",
         "dependencia",
         "responsable",
-        "valor_proyecto",
-        "monto_contrapartida",
+        "valor_proyecto_formateado",
+        "monto_contrapartida_formateado",
         "bpin",
         "fecha_creacion",
     )
@@ -177,3 +177,11 @@ class ProyectoAdmin(UnfoldModelAdmin):
             "fields": ("municipios",)
         }),
     )
+
+    @admin.display(description="valor_proyecto", ordering="valor_proyecto")
+    def valor_proyecto_formateado(self, obj):
+        return f"${intcomma(round(obj.valor_proyecto, 2)):,.2f}" if obj.valor_proyecto is not None else "-"
+
+    @admin.display(description="monto_contrapartida", ordering="monto_contrapartida")
+    def monto_contrapartida_formateado(self, obj):
+        return f"${intcomma(round(obj.monto_contrapartida, 2)):,.2f}" if obj.monto_contrapartida is not None else "-"

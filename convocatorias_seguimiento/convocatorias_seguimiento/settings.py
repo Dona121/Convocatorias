@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'contenido',
 ]
 
@@ -166,96 +167,85 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 UNFOLD = {
-    "SITE_TITLE": "Panel de Administración",
-    "SITE_HEADER": "Panel de Administración",
-
-    "NAVIGATION": [
-        # ── Convocatorias y Proyectos ────────────────────────────────────────
-        {
-            "title": _("Convocatorias"),
-            "separator": True,
-            "icon": "description",
-            "items": [
-                {
-                    "title": _("Convocatorias"),
-                    "icon": "article",
-                    "link": lambda request: reverse_lazy("admin:contenido_convocatorias_changelist"),
-                },
-                {
-                    "title": _("Proyectos"),
-                    "icon": "folder_open",
-                    "link": lambda request: reverse_lazy("admin:contenido_proyecto_changelist"),
-                },
-                {
-                    "title": _("Beneficiarios"),
-                    "icon": "group",
-                    "link": lambda request: reverse_lazy("admin:contenido_beneficiarios_changelist"),
-                },
-                {
-                    "title": _("Indicadores MGA"),
-                    "icon": "bar_chart",
-                    "link": lambda request: reverse_lazy("admin:contenido_indicadormga_changelist"),
-                },
-            ],
-        },
-
-        # ── Parámetros ───────────────────────────────────────────────────────
-        {
-            "title": _("Parámetros"),
-            "separator": True,
-            "icon": "settings",
-            "items": [
-                {
-                    "title": _("Estados"),
-                    "icon": "toggle_on",
-                    "link": lambda request: reverse_lazy("admin:contenido_estado_changelist"),
-                },
-                {
-                    "title": _("Segmentos"),
-                    "icon": "category",
-                    "link": lambda request: reverse_lazy("admin:contenido_segmentos_changelist"),
-                },
-                {
-                    "title": _("Sectores"),
-                    "icon": "domain",
-                    "link": lambda request: reverse_lazy("admin:contenido_sectores_changelist"),
-                },
-                {
-                    "title": _("Ubicaciones"),
-                    "icon": "place",
-                    "link": lambda request: reverse_lazy("admin:contenido_ubicacion_changelist"),
-                },
-                {
-                    "title": _("Municipios"),
-                    "icon": "location_city",
-                    "link": lambda request: reverse_lazy("admin:contenido_municipios_changelist"),
-                },
-                {
-                    "title": _("Dependencias"),
-                    "icon": "account_tree",
-                    "link": lambda request: reverse_lazy("admin:contenido_dependencia_changelist"),
-                },
-                {
-                    "title": _("Responsables"),
-                    "icon": "manage_accounts",
-                    "link": lambda request: reverse_lazy("admin:contenido_responsable_changelist"),
-                },
-                {
-                    "title": _("Aliados"),
-                    "icon": "handshake",
-                    "link": lambda request: reverse_lazy("admin:contenido_aliados_changelist"),
-                },
-                {
-                    "title": _("Tipos de Beneficiario"),
-                    "icon": "person_search",
-                    "link": lambda request: reverse_lazy("admin:contenido_clasificacionbeneficiario_changelist"),
-                },
-                {
-                    "title": _("Clasificación Indicadores MGA"),
-                    "icon": "analytics",
-                    "link": lambda request: reverse_lazy("admin:contenido_clasificacionindicadormga_changelist"),
-                },
-            ],
-        },
-    ],
+    "SIDEBAR": {
+        "navigation": [
+            {
+                "title": "Seguimiento",
+                "icon": "track_changes",
+                "items": [
+                    {
+                        "title": "Convocatorias",
+                        "icon": "campaign",
+                        "link": "/admin/contenido/convocatorias/",
+                    },
+                    {
+                        "title": "Proyectos",
+                        "icon": "folder_open",
+                        "link": "/admin/contenido/proyecto/",
+                    },
+                ],
+            },
+            {
+                "title": "Parámetros",
+                "icon": "settings",
+                "items": [
+                    {
+                        "title": "Dependencias",
+                        "icon": "account_tree",
+                        "link": "/admin/contenido/dependencia/",
+                    },
+                    {
+                        "title": "Responsables",
+                        "icon": "person",
+                        "link": "/admin/contenido/responsable/",
+                    },
+                    {
+                        "title": "Aliados",
+                        "icon": "handshake",
+                        "link": "/admin/contenido/aliados/",
+                    },
+                    {
+                        "title": "Segmentos",
+                        "icon": "donut_small",
+                        "link": "/admin/contenido/segmentos/",
+                    },
+                    {
+                        "title": "Sectores",
+                        "icon": "category",
+                        "link": "/admin/contenido/sectores/",
+                    },
+                    {
+                        "title": "Estados",
+                        "icon": "flag",
+                        "link": "/admin/contenido/estado/",
+                    },
+                    {
+                        "title": "Municipios",
+                        "icon": "location_city",
+                        "link": "/admin/contenido/municipios/",
+                    },
+                    {
+                        "title": "Ubicaciones",
+                        "icon": "place",
+                        "link": "/admin/contenido/ubicacion/",
+                    },
+                    {
+                        "title": "Tipos de beneficiario",
+                        "icon": "group",
+                        "link": "/admin/contenido/clasificacionbeneficiario/",
+                    },
+                    {
+                        "title": "Vigencias",
+                        "icon": "calendar_month",
+                        "link": "/admin/contenido/clasificacionvigencia/",
+                    },
+                    {
+                        "title": "Indicadores MGA",
+                        "icon": "bar_chart",
+                        "link": "/admin/contenido/clasificacionindicadormga/",
+                    },
+                ],
+            },
+        ]
+    },
 }
