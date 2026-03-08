@@ -161,6 +161,10 @@ CSRF_TRUSTED_ORIGINS = [
     "https://chase-nondrinkable-editorially.ngrok-free.dev"
 ]
 
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 UNFOLD = {
     "SITE_TITLE": "Panel de Administración",
     "SITE_HEADER": "Panel de Administración",
