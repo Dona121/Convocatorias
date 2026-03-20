@@ -130,6 +130,7 @@ class Convocatorias(models.Model):
     aliados = models.ManyToManyField(
         Aliados
     )
+    objectivo = models.TextField(null=True)
     segmento = models.ManyToManyField(
         Segmentos
     ) 
@@ -141,6 +142,7 @@ class Convocatorias(models.Model):
         null=True,
         blank=False,
     )
+    estado_monto = models.CharField(max_length=2,choices=[("ES","Especifica"),("NE","No especifica")],null=True)
     monto = models.DecimalField(decimal_places=10, max_digits=30)
     sectores = models.ManyToManyField(
         Sectores
@@ -148,7 +150,9 @@ class Convocatorias(models.Model):
     ubicacion = models.ManyToManyField(
         Ubicacion
     )
-    contacto = models.CharField(max_length=100)
+    enlace_convocatoria = models.EmailField(null=True)
+    enlace_del_actor = models.EmailField(null=True)
+    contacto = models.EmailField(max_length=100,null=True)
     que_ofrece = models.TextField(null=True,blank=True)
     quienes_pueden_participar = models.TextField(null=True,blank=True)
     publico_priorizado = models.TextField(null=True,blank=True)
