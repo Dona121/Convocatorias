@@ -207,7 +207,7 @@ UNFOLD = {
                         "link": "/admin/contenido/responsable/",
                     },
                     {
-                        "title": "Clasficación Aliados",
+                        "title": "Clasificación Aliados",
                         "icon": "bookmark",
                         "link": "/admin/contenido/clasificacionaliados/",
                     },
