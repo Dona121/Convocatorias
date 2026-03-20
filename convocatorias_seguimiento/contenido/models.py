@@ -150,8 +150,8 @@ class Convocatorias(models.Model):
     ubicacion = models.ManyToManyField(
         Ubicacion
     )
-    enlace_convocatoria = models.EmailField(null=True)
-    enlace_del_actor = models.EmailField(null=True)
+    enlace_convocatoria = models.CharField(max_length=250,null=True)
+    enlace_del_actor = models.CharField(max_length=250,null=True)
     contacto = models.EmailField(max_length=100,null=True)
     que_ofrece = models.TextField(null=True,blank=True)
     quienes_pueden_participar = models.TextField(null=True,blank=True)
