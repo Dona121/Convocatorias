@@ -157,8 +157,12 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             "fields": (
                 "nombre_convocatoria",
                 "estado",
+                "estado_monto",
                 "monto", 
                 "contacto",
+                "objetivo",
+                "enlace_convocatoria",
+                "enlace_del_actor"
             )
         }),
         ("Fechas", {

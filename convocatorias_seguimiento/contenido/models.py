@@ -130,7 +130,7 @@ class Convocatorias(models.Model):
     aliados = models.ManyToManyField(
         Aliados
     )
-    objectivo = models.TextField(null=True)
+    objetivo = models.TextField(null=True)
     segmento = models.ManyToManyField(
         Segmentos
     ) 
