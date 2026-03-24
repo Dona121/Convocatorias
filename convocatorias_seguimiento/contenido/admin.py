@@ -3,6 +3,13 @@ from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.admin import TabularInline
 from contenido import models
 from contenido import forms
+from unfold.sections import TableSection, TemplateSection
+
+class SeccionProyectos(TableSection):
+    verbose_name = "Proyectos"
+    height = 500
+    related_name = 'proyecto_set'
+    fields = ["nombre_proyecto","bpin","valor_proyecto"]
 
 
 class BeneficiariosInline(TabularInline):
@@ -139,14 +146,18 @@ class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
 
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin):
+    list_per_page = 20
     list_display = (
         "nombre_convocatoria",
         "estado",
         "monto_de_la_convocatoria", 
         "fecha_apertura",
         "fecha_cierre",
-        "contacto",
+        'numero_proyectos',
     )
+    list_sections = [
+        SeccionProyectos
+    ]
     list_filter = ("estado", "segmento", "sectores")
     search_fields = ("nombre_convocatoria", "contacto", "que_ofrece")
     filter_horizontal = ("sectores", "aliados" ,"dependencia", "segmento", "ubicacion")
@@ -178,6 +189,14 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             )
         }),
     )
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .prefetch_related(
+                "proyecto_set",
+            )
+        )
 
     @admin.display(description="Monto de la convocatoria", ordering="monto")
     def monto_de_la_convocatoria(self, obj):
@@ -185,7 +204,13 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             return f"${obj.monto:,.2f}"
         return "-"
 
-
+    def numero_proyectos(self,obj):
+        proyectos = obj.proyecto_set.all()
+        numero_proyectos = proyectos.count()
+        if numero_proyectos:
+            return numero_proyectos
+        return 0
+    
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
     list_display = (
