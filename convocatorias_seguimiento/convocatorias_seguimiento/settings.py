@@ -237,11 +237,6 @@ UNFOLD = {
                         "link": "/admin/contenido/sectores/",
                     },
                     {
-                        "title": "Estados",
-                        "icon": "flag",
-                        "link": "/admin/contenido/estado/",
-                    },
-                    {
                         "title": "Municipios",
                         "icon": "location_city",
                         "link": "/admin/contenido/municipios/",
