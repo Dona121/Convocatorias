@@ -143,7 +143,7 @@ class Convocatorias(models.Model):
         blank=False,
     )
     estado_monto = models.CharField(max_length=2,choices=[("ES","Especifica"),("NE","No especifica")],null=True)
-    monto = models.DecimalField(decimal_places=10, max_digits=30)
+    monto = models.DecimalField(decimal_places=3, max_digits=30)
     sectores = models.ManyToManyField(
         Sectores
     )
@@ -178,9 +178,9 @@ class Proyecto(models.Model):
         Municipios
     )
     nombre_proyecto = models.TextField()
-    valor_proyecto = models.DecimalField(max_digits=30, decimal_places=10)
+    valor_proyecto = models.DecimalField(max_digits=30, decimal_places=3)
     bpin = models.CharField(max_length=20)
-    monto_contrapartida = models.DecimalField(max_digits=30, decimal_places=10,null=True,blank=True)
+    monto_contrapartida = models.DecimalField(max_digits=30, decimal_places=3,null=True,blank=True)
     dependencia = models.ForeignKey(
         Dependencia,
         on_delete=models.CASCADE,

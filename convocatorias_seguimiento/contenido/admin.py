@@ -139,7 +139,6 @@ class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
 
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin):
-    form = forms.ConvocatoriasForm
     list_display = (
         "nombre_convocatoria",
         "estado",
@@ -189,7 +188,6 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
 
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
-    forms = forms.ProyectoForm
     list_display = (
         "nombre_proyecto",
         "convocatoria",

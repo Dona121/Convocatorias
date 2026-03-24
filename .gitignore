@@ -1,7 +1,23 @@
-# entorno virtual
-.venv/
+# Entorno virtual
+.venv
 
-# base de datos sqlite
-*.sqlite3
-db.sqlite3
+# uv
+.python-version
+uv.lock
+
+# Variables de entorno
 .env
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+
+# Django
+*.sqlite3
+staticfiles/
+media/
+
+# IDE
+.vscode/
+.idea/

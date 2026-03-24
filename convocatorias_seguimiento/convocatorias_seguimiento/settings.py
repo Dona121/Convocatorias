@@ -11,26 +11,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 from dotenv import load_dotenv
 import os
-
-import os
 import dj_database_url
 from pathlib import Path
 from django.templatetags.static import static
-
-# --- para unfold
-
-
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
-
-print("Buscando .env en:", ENV_PATH)
 
 load_dotenv(ENV_PATH)
 
@@ -39,10 +29,10 @@ load_dotenv(ENV_PATH)
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d%h3+&m)dh21imvzgr&g=q4uv&^^)5m!aaf=j=lh$kq24qlawt'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -70,7 +60,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.locale.LocaleMiddleware",
 ]
+
+LANGUAGE_CODE = "es"
+
+USE_I18N = True
+
+LANGUAGES = (
+    ("en", _("English")),
+    ("es", _("Spanish")),
+)
 
 ROOT_URLCONF = 'convocatorias_seguimiento.urls'
 
@@ -168,15 +168,29 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 UNFOLD = {
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "SHOW_BACK_BUTTON": True,
+    "SHOW_LANGUAGES": True,
+    "BORDER_RADIUS": "6px",
     "SITE_TITLE": "Convocatorias",
     "SITE_HEADER": "Convocatorias",
-    "SITE_SYMBOL": "campaign", 
-    "STYLES": [
-        lambda request: static("css/custom_admin.css"),
-    ],
+    "SITE_SYMBOL": "campaign",
+    "EXTENSIONS": {
+        "modeltranslation": {
+            "flags": {
+                "en": "🇬🇧",
+                "fr": "🇫🇷",
+                "nl": "🇧🇪",
+            },
+        },
+    },
     "SIDEBAR": {
+        "show_search" : True,
+        "command_search": True,
         "navigation": [
             {
+                "separator":True,
                 "title": "Seguimiento",
                 "icon": "track_changes",
                 "items": [
