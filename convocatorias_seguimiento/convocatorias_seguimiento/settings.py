@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'djmoney',
     'contenido',
 ]
 
@@ -219,6 +220,11 @@ UNFOLD = {
                         "title": "Responsables",
                         "icon": "person",
                         "link": "/admin/contenido/responsable/",
+                    },
+                    {
+                        "title": "Fuentes de Financiación",
+                        "icon":"payments",
+                        "link": "/admin/contenido/clasificacionfuentefinanciacion/"
                     },
                     {
                         "title": "Clasificación Aliados",

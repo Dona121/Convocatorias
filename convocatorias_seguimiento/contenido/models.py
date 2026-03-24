@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from djmoney.models.fields import MoneyField
 
 # Create your models here.
 
@@ -143,7 +144,7 @@ class Convocatorias(models.Model):
         blank=False,
     )
     estado_monto = models.CharField(max_length=2,choices=[("ES","Especifica"),("NE","No especifica")],null=True)
-    monto = models.DecimalField(decimal_places=3, max_digits=30)
+    monto = MoneyField(decimal_places=4, max_digits=19,null=True,default_currency='COP')
     sectores = models.ManyToManyField(
         Sectores
     )
@@ -178,9 +179,9 @@ class Proyecto(models.Model):
         Municipios
     )
     nombre_proyecto = models.TextField()
-    valor_proyecto = models.DecimalField(max_digits=30, decimal_places=3)
+    valor_proyecto = MoneyField(max_digits=19, decimal_places=4,null=True,default_currency='COP')
     bpin = models.CharField(max_length=20)
-    monto_contrapartida = models.DecimalField(max_digits=30, decimal_places=3,null=True,blank=True)
+    monto_contrapartida = MoneyField(max_digits=19, decimal_places=4,null=True,default_currency='COP')
     dependencia = models.ForeignKey(
         Dependencia,
         on_delete=models.CASCADE,
@@ -307,3 +308,67 @@ class IndicadorMGA(models.Model):
 
     def __str__(self):
         return f"{self.indicadores}"
+    
+class ClasificacionFuenteFinanciacion(models.Model):
+    class TipoFuente(models.TextChoices):
+        NACIONAL = "NAC", "Nacional"
+        INTERNACIONAL = "INT", "Internacional"
+
+    class SubtipoFuente(models.TextChoices):
+        RECURSOS_PROPIOS = "RP", "Recursos Propios"
+        PGN = "PGN", "Presupuesto General de la Nación"
+        REGALIAS = "SGR", "Sistema General de Regalías"
+        CREDITO = "CRE", "Crédito"
+        COOPERACION = "COO", "Cooperación Internacional"
+        DONACION = "DON", "Donación"
+        OTRO = "OTR", "Otro"
+
+    tipo_de_fuente = models.CharField(
+        max_length=3,
+        choices=TipoFuente.choices,
+        verbose_name="Tipo de Fuente"
+    )
+    subtipo = models.CharField(
+        max_length=3,
+        choices=SubtipoFuente.choices,
+        null=True,
+        blank=True,
+        verbose_name="Subtipo de Fuente"
+    )
+    fuente = models.CharField(max_length=250,verbose_name="Fuente de Financiacion")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Clasificación Fuente de Financiación"
+        verbose_name_plural = "Clasificación Fuentes de Financiación"
+
+    def __str__(self):
+        return f"{self.fuente}"
+    
+class FuenteFinanciacion(models.Model):
+    vigencia = models.ForeignKey(
+        ClasificacionVigencia,
+        on_delete=models.CASCADE
+    )
+    fuente = models.ForeignKey(
+        ClasificacionFuenteFinanciacion,
+        on_delete=models.CASCADE,
+        verbose_name="Fuente de Financiación"
+    )
+    proyecto = models.ForeignKey(
+        Proyecto,
+        on_delete=models.CASCADE,
+    )
+    valor_comprometido = MoneyField(max_digits=19,decimal_places=4,verbose_name="Valor Comprometido",blank=True,null=True,default_currency="COP")
+    valor_pagado = MoneyField(max_digits=19,decimal_places=4,verbose_name="Valor Pagado",blank=True,null=True,default_currency="COP")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Fuente de Financiación"
+        verbose_name_plural = "Fuentes de Financiación"
+        unique_together = [("vigencia","fuente","proyecto")]
+
+    def __str__(self):
+        return f"{self.fuente}"

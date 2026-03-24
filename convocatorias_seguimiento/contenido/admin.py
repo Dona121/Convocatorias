@@ -5,30 +5,50 @@ from contenido import models
 from contenido import forms
 from unfold.sections import TableSection, TemplateSection
 
+class BeneficiariosInline(TabularInline):
+    model = models.Beneficiarios
+    form = forms.BeneficiariosForm
+    extra = 1
+    tab = True
+    verbose_name = "Beneficiario"
+    verbose_name_plural = "Beneficiarios"
+    show_count = True
+    hide_title = True
+    can_delete = True
+    ordering_field = "id"
+    autocomplete_fields = ("beneficiario",)
+
+class FuentesInline(TabularInline):
+    model = models.FuenteFinanciacion
+    form = forms.FuentesForm
+    extra = 1
+    tab = True
+    verbose_name = "Fuente de Financiación"
+    verbose_name_plural = "Fuentes de Financiación"
+    show_count = True
+    hide_title = True
+    can_delete = True
+    ordering_field = "id"
+    autocomplete_fields = ("fuente","vigencia")
+
+class IndicadoresInline(TabularInline):
+    model = models.IndicadorMGA
+    form = forms.IndicadoresForm
+    extra = 1
+    tab = True
+    verbose_name = "Indicador MGA"
+    verbose_name_plural = "Indicadores MGA"
+    show_count = True
+    hide_title = True
+    can_delete = True
+    ordering_field = "id"
+    autocomplete_fields = ("indicadores","vigencia")
+
 class SeccionProyectos(TableSection):
     verbose_name = "Proyectos"
     height = 500
     related_name = 'proyecto_set'
     fields = ["nombre_proyecto","bpin","valor_proyecto"]
-
-
-class BeneficiariosInline(TabularInline):
-    model = models.Beneficiarios
-    form = forms.BeneficariosForm
-    tab = True
-    extra = 1
-    verbose_name = "Beneficiario"
-    verbose_name_plural = "Beneficiarios"
-
-
-class IndicadoresInline(TabularInline):
-    model = models.IndicadorMGA
-    form = forms.IndicadoresForm
-    tab = True
-    extra = 1
-    verbose_name = "Indicador MGA"
-    verbose_name_plural = "Indicadores MGA"
-
 
 @admin.register(models.Dependencia)
 class DependenciaAdmin(UnfoldModelAdmin):
@@ -76,6 +96,11 @@ class EstadoAdmin(UnfoldModelAdmin):
     search_fields = ("estado",)
     ordering = ("estado",)
 
+@admin.register(models.ClasificacionFuenteFinanciacion)
+class EstadoAdmin(UnfoldModelAdmin):
+    list_display = ("tipo_de_fuente","subtipo","fuente")
+    search_fields = ("tipo_de_fuente","subtipo","fuente")
+    ordering = ("fecha_creacion",)
 
 @admin.register(models.Municipios)
 class MunicipiosAdmin(UnfoldModelAdmin):
@@ -150,7 +175,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     list_display = (
         "nombre_convocatoria",
         "estado",
-        "monto_de_la_convocatoria", 
+        "monto", 
         "fecha_apertura",
         "fecha_cierre",
         'numero_proyectos',
@@ -158,6 +183,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     list_sections = [
         SeccionProyectos
     ]
+    autocomplete_fields = ("estado",)
     list_filter = ("estado", "segmento", "sectores")
     search_fields = ("nombre_convocatoria", "contacto", "que_ofrece")
     filter_horizontal = ("sectores", "aliados" ,"dependencia", "segmento", "ubicacion")
@@ -198,12 +224,6 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             )
         )
 
-    @admin.display(description="Monto de la convocatoria", ordering="monto")
-    def monto_de_la_convocatoria(self, obj):
-        if obj.monto is not None:
-            return f"${obj.monto:,.2f}"
-        return "-"
-
     def numero_proyectos(self,obj):
         proyectos = obj.proyecto_set.all()
         numero_proyectos = proyectos.count()
@@ -213,22 +233,22 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
+    inlines = (BeneficiariosInline, IndicadoresInline,FuentesInline)
     list_display = (
         "nombre_proyecto",
         "convocatoria",
         "dependencia",
         "responsable",
-        "valor_del_proyecto",               
-        "monto_contrapartida_del_proyecto", 
+        "valor_proyecto",               
+        "monto_contrapartida", 
         "bpin",
         "fecha_creacion",
     )
-    raw_id_fields = ("convocatoria",)
+    autocomplete_fields = ("convocatoria","dependencia","responsable")
     list_filter = ("dependencia", "responsable", "convocatoria")
-    search_fields = ("nombre_proyecto", "bpin")
+    search_fields = ("nombre_proyecto", "bpin","convocatoria")
     filter_horizontal = ("municipios",)
     ordering = ("-fecha_creacion",)
-    inlines = (BeneficiariosInline, IndicadoresInline)
     fieldsets = (
         ("Información general", {
             "fields": (
@@ -247,16 +267,3 @@ class ProyectoAdmin(UnfoldModelAdmin):
             "fields": ("municipios",)
         }),
     )
-
-
-    @admin.display(description="Valor del proyecto", ordering="valor_proyecto")
-    def valor_del_proyecto(self, obj):
-        if obj.valor_proyecto is not None:
-            return f"${obj.valor_proyecto:,.2f}"
-        return "-"
-
-    @admin.display(description="Monto contrapartida del proyecto", ordering="monto_contrapartida")
-    def monto_contrapartida_del_proyecto(self, obj):
-        if obj.monto_contrapartida is not None:
-            return f"${obj.monto_contrapartida:,.2f}"
-        return "-"
