@@ -82,20 +82,7 @@ class Sectores(models.Model):
         verbose_name_plural = "Sectores"
 
     def __str__(self):
-        return f"{self.codigo_sector} - {self.sector}"    
-
-
-class Estado(models.Model):
-    estado = models.CharField(max_length=100)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Estado"
-        verbose_name_plural = "Estados"
-
-    def __str__(self):
-        return f"{self.estado}" 
+        return f"{self.codigo_sector} - {self.sector}"
 
 
 class Municipios(models.Model):
@@ -137,14 +124,8 @@ class Convocatorias(models.Model):
     ) 
     fecha_apertura = models.DateTimeField()
     fecha_cierre = models.DateTimeField(null=True, blank=True)
-    estado = models.ForeignKey(
-        Estado,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=False,
-    )
     estado_monto = models.CharField(max_length=2,choices=[("ES","Especifica"),("NE","No especifica")],null=True)
-    monto = MoneyField(decimal_places=4, max_digits=19,null=True,default_currency='COP')
+    monto = MoneyField(decimal_places=4, max_digits=19,null=True,default_currency='COP',blank=True)
     sectores = models.ManyToManyField(
         Sectores
     )
@@ -153,7 +134,7 @@ class Convocatorias(models.Model):
     )
     enlace_convocatoria = models.CharField(max_length=250,null=True)
     enlace_del_actor = models.CharField(max_length=250,null=True)
-    contacto = models.EmailField(max_length=100,null=True)
+    contacto = models.EmailField(max_length=100,null=True,blank=True)
     que_ofrece = models.TextField(null=True,blank=True)
     quienes_pueden_participar = models.TextField(null=True,blank=True)
     publico_priorizado = models.TextField(null=True,blank=True)
@@ -179,9 +160,7 @@ class Proyecto(models.Model):
         Municipios
     )
     nombre_proyecto = models.TextField()
-    valor_proyecto = MoneyField(max_digits=19, decimal_places=4,null=True,default_currency='COP')
     bpin = models.CharField(max_length=20)
-    monto_contrapartida = MoneyField(max_digits=19, decimal_places=4,null=True,default_currency='COP')
     dependencia = models.ForeignKey(
         Dependencia,
         on_delete=models.CASCADE,

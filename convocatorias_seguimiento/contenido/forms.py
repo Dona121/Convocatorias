@@ -15,4 +15,4 @@ class IndicadoresForm(forms.ModelForm):
 class FuentesForm(forms.ModelForm):
     class Meta:
         model = models.FuenteFinanciacion
-        fields = "__all__"
+        fields = ["vigencia","fuente","valor_comprometido","valor_pagado",]

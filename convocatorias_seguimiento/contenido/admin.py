@@ -4,6 +4,10 @@ from unfold.admin import TabularInline
 from contenido import models
 from contenido import forms
 from unfold.sections import TableSection, TemplateSection
+from unfold.datasets import BaseDataset
+from django.utils import timezone
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 class BeneficiariosInline(TabularInline):
     model = models.Beneficiarios
@@ -15,8 +19,8 @@ class BeneficiariosInline(TabularInline):
     show_count = True
     hide_title = True
     can_delete = True
-    ordering_field = "id"
     autocomplete_fields = ("beneficiario",)
+    list_fullwidth = True
 
 class FuentesInline(TabularInline):
     model = models.FuenteFinanciacion
@@ -30,6 +34,7 @@ class FuentesInline(TabularInline):
     can_delete = True
     ordering_field = "id"
     autocomplete_fields = ("fuente","vigencia")
+    list_fullwidth = True
 
 class IndicadoresInline(TabularInline):
     model = models.IndicadorMGA
@@ -43,12 +48,13 @@ class IndicadoresInline(TabularInline):
     can_delete = True
     ordering_field = "id"
     autocomplete_fields = ("indicadores","vigencia")
+    list_fullwidth = True
 
 class SeccionProyectos(TableSection):
     verbose_name = "Proyectos"
     height = 500
     related_name = 'proyecto_set'
-    fields = ["nombre_proyecto","bpin","valor_proyecto"]
+    fields = ["nombre_proyecto","bpin",]
 
 @admin.register(models.Dependencia)
 class DependenciaAdmin(UnfoldModelAdmin):
@@ -88,13 +94,6 @@ class SectoresAdmin(UnfoldModelAdmin):
     list_display = ("codigo_sector", "sector", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("codigo_sector", "sector")
     ordering = ("codigo_sector",)
-
-
-@admin.register(models.Estado)
-class EstadoAdmin(UnfoldModelAdmin):
-    list_display = ("estado", "fecha_creacion", "fecha_actualizacion")
-    search_fields = ("estado",)
-    ordering = ("estado",)
 
 @admin.register(models.ClasificacionFuenteFinanciacion)
 class EstadoAdmin(UnfoldModelAdmin):
@@ -171,20 +170,21 @@ class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
 
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin):
+    conditional_fields = {
+        "monto" : "estado_monto == 'ES'"
+    }
     list_per_page = 20
     list_display = (
         "nombre_convocatoria",
-        "estado",
         "monto", 
-        "fecha_apertura",
-        "fecha_cierre",
+        "estado",
         'numero_proyectos',
     )
     list_sections = [
         SeccionProyectos
     ]
-    autocomplete_fields = ("estado",)
-    list_filter = ("estado", "segmento", "sectores")
+    radio_fields = {"estado_monto":admin.HORIZONTAL}
+    list_filter = ("segmento", "sectores")
     search_fields = ("nombre_convocatoria", "contacto", "que_ofrece")
     filter_horizontal = ("sectores", "aliados" ,"dependencia", "segmento", "ubicacion")
     ordering = ("-fecha_apertura",)
@@ -192,7 +192,6 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
         ("Información general", {
             "fields": (
                 "nombre_convocatoria",
-                "estado",
                 "estado_monto",
                 "monto", 
                 "contacto",
@@ -231,6 +230,31 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             return numero_proyectos
         return 0
     
+    def estado(self, obj):
+        fecha_cierre = obj.fecha_cierre
+        if fecha_cierre:
+            dias = (fecha_cierre.date() - timezone.now().date()).days
+
+            base = "padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;display:inline-block;"
+
+            if dias < 0:
+                return format_html(
+                    "<span style='{}background-color:#fee2e2;color:#991b1b;'>Cerrada</span>", base
+                )
+            elif dias <= 7:
+                return format_html(
+                    "<span style='{}background-color:#fee2e2;color:#991b1b;'>{} días para cierre</span>", base, dias
+                )
+            elif dias <= 15:
+                return format_html(
+                    "<span style='{}background-color:#fef9c3;color:#854d0e;'>{} días para cierre</span>", base, dias
+                )
+            else:
+                return format_html(
+                    "<span style='{}background-color:#dcfce7;color:#166534;'>{} días para cierre</span>", base, dias
+                )
+        return "Pendiente asignar fecha"
+    
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
     inlines = (BeneficiariosInline, IndicadoresInline,FuentesInline)
@@ -238,9 +262,7 @@ class ProyectoAdmin(UnfoldModelAdmin):
         "nombre_proyecto",
         "convocatoria",
         "dependencia",
-        "responsable",
-        "valor_proyecto",               
-        "monto_contrapartida", 
+        "responsable", 
         "bpin",
         "fecha_creacion",
     )
@@ -259,9 +281,6 @@ class ProyectoAdmin(UnfoldModelAdmin):
         }),
         ("Responsables", {
             "fields": ("dependencia", "responsable")
-        }),
-        ("Financiero", {
-            "fields": ("valor_proyecto", "monto_contrapartida")
         }),
         ("Ubicación", {
             "fields": ("municipios",)
