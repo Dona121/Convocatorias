@@ -191,13 +191,13 @@ UNFOLD = {
                         "title" : "Grupos",
                         "icon" : "groups",
                         "link" : reverse_lazy("admin:auth_group_changelist"),
-                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
+                        "permission" : lambda request: request.user.is_superuser
                     },
                     {
                         "title" : "Usuarios",
                         "icon" : "person",
                         "link" : reverse_lazy("admin:auth_user_changelist"),
-                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
+                        "permission" : lambda request: request.user.is_superuser
                     }
                 ]
             },
