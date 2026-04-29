@@ -97,10 +97,21 @@ WSGI_APPLICATION = 'convocatorias_seguimiento.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-DATABASE = {
-    "default" : dj_database_url.config(
-        default=os.getenv("DATABASE_URL")
-    )
+# DATABASE = {
+#     "default" : dj_database_url.config(
+#         default=os.getenv("DATABASE_URL")
+#     )
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("PGDATABASE"),
+        'USER': os.getenv("PGUSER"),
+        'PASSWORD': os.getenv("PGPASSWORD"),
+        'HOST': os.getenv("PGHOST"),
+        'PORT': os.getenv("PGPORT"),
+    }
 }
 
 # Password validation
