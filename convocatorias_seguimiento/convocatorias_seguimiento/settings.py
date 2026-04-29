@@ -154,7 +154,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Agregar esto
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
@@ -180,6 +182,9 @@ UNFOLD = {
     "SITE_TITLE": "Convocatorias",
     "SITE_HEADER": "Convocatorias",
     "SITE_SYMBOL": "campaign",
+    "STYLES" : [
+        lambda request: static("css/sidebar.css"),
+    ],
     "SIDEBAR": {
         "show_search" : True,
         "command_search": True,
@@ -304,9 +309,9 @@ UNFOLD = {
             },
         ]
     },
-    "COLORS": {
+"COLORS": {
     "base": {
-        "50":  "oklch(98.5% 0.003 249.372)",
+        "50": "oklch(98.5% 0.003 249.372)",
         "100": "oklch(96.7% 0.005 249.372)",
         "200": "oklch(92.8% 0.009 249.372)",
         "300": "oklch(87.2% 0.013 249.372)",
@@ -314,9 +319,9 @@ UNFOLD = {
         "500": "oklch(55.1% 0.028 249.372)",
         "600": "oklch(44.6% 0.031 249.372)",
         "700": "oklch(37.3% 0.034 249.372)",
-        "800": "oklch(27.8% 0.033 249.372)",
-        "900": "oklch(21.0% 0.034 249.372)",
-        "950": "oklch(13.0% 0.028 249.372)",
+        "800": "oklch(25% 0.05 260)",
+        "900": "oklch(20% 0.06 260)",
+        "950": "oklch(16% 0.06 260)",
     },
     "primary": {
         "50":  "oklch(97.2% 0.01  249.372)",
@@ -340,4 +345,7 @@ UNFOLD = {
         "important-dark":  "var(--color-base-100)",
     },
 },
+    "SHOW_THEME_SWITCHER": False,
+    "THEME": "white",
 }
+
