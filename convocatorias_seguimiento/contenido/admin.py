@@ -8,6 +8,7 @@ from unfold.datasets import BaseDataset
 from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 class BeneficiariosInline(TabularInline):
     model = models.Beneficiarios
@@ -54,7 +55,21 @@ class SeccionProyectos(TableSection):
     verbose_name = "Proyectos"
     height = 500
     related_name = 'proyecto_set'
-    fields = ["nombre_proyecto","bpin",]
+    fields = ["enlace_proyecto","proyecto_postulado","dependencia"]
+
+    def enlace_proyecto(self,obj):
+        admin = reverse("admin:contenido_proyecto_changelist") + f"?id={obj.id}" 
+        return format_html("<a href='{}'>{}</a>",admin,obj.nombre_proyecto)
+    
+    enlace_proyecto.short_description = "Nombre del Proyecto"
+
+    def proyecto_postulado(self, obj):
+        base = "padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;display:inline-block;"
+        postulado = "Proyecto postulado"
+        no_postulado= "Proyecto no postulado"
+        if obj.fecha_envio_postulacion_proyecto:
+            return format_html("<span style='{}background-color:#dcfce7;color:#166534;'>{}</span>",base,postulado)
+        return format_html("<span style='{}background-color:#fee2e2;color:#991b1b;'>{}</p>",base,no_postulado)
 
 @admin.register(models.Dependencia)
 class DependenciaAdmin(UnfoldModelAdmin):
@@ -175,10 +190,12 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     }
     list_per_page = 20
     list_display = (
+        "id",
         "nombre_convocatoria",
         "monto", 
         "estado",
         'numero_proyectos',
+        "fecha_creacion",
     )
     list_sections = [
         SeccionProyectos
@@ -186,8 +203,9 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     radio_fields = {"estado_monto":admin.HORIZONTAL}
     list_filter = ("segmento", "sectores")
     search_fields = ("nombre_convocatoria", "contacto", "que_ofrece")
+    list_display_links = ("id","nombre_convocatoria")
     filter_horizontal = ("sectores", "aliados" ,"dependencia", "segmento", "ubicacion")
-    ordering = ("-fecha_apertura",)
+    ordering = ("id",)
     fieldsets = (
         ("Información general", {
             "fields": (
@@ -208,6 +226,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
         }),
         ("Detalles", {
             "fields": (
+                "imagen_convocatoria",
                 "que_ofrece",
                 "quienes_pueden_participar",
                 "publico_priorizado",
@@ -226,9 +245,15 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     def numero_proyectos(self,obj):
         proyectos = obj.proyecto_set.all()
         numero_proyectos = proyectos.count()
-        if numero_proyectos:
-            return numero_proyectos
-        return 0
+        base = "padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;display:inline-block;"
+        plural = "Sin proyectos"
+        if numero_proyectos == 1:
+            plural = " Proyecto"
+            return format_html("<span style='{}background-color:#fef9c3;color:#854d0e;'>{}{}</span>",base,numero_proyectos,plural)
+        elif numero_proyectos > 1: 
+            plural = " Proyectos"
+            return format_html("<span style='{}background-color:#dcfce7;color:#166534;'>{}{}</span>",base,numero_proyectos,plural)
+        return format_html("<span style='{}background-color:#fee2e2;color:#991b1b;'>{}</span>",base,plural)
     
     def estado(self, obj):
         fecha_cierre = obj.fecha_cierre
@@ -259,18 +284,20 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
 class ProyectoAdmin(UnfoldModelAdmin):
     inlines = (BeneficiariosInline, IndicadoresInline,FuentesInline)
     list_display = (
+        "id",
         "nombre_proyecto",
         "convocatoria",
         "dependencia",
         "responsable", 
         "bpin",
-        "fecha_creacion",
+        "proyecto_postulado",
     )
     autocomplete_fields = ("convocatoria","dependencia","responsable")
     list_filter = ("dependencia", "responsable", "convocatoria")
     search_fields = ("nombre_proyecto", "bpin","convocatoria")
+    list_display_links = ("id","nombre_proyecto")
     filter_horizontal = ("municipios",)
-    ordering = ("-fecha_creacion",)
+    ordering = ("id",)
     fieldsets = (
         ("Información general", {
             "fields": (
@@ -285,4 +312,20 @@ class ProyectoAdmin(UnfoldModelAdmin):
         ("Ubicación", {
             "fields": ("municipios",)
         }),
+        ("Aliados" , {
+            "fields" : ("aliados",)
+        }),
+        ("Fechas de Trazabilidad" , {
+            "fields" : ("fecha_envio_postulacion_proyecto","fecha_solicitud_subsanacion_proyecto",
+                        "fecha_envio_subsanciones_proyecto","fecha_publicacion_resultados_proyecto")
+        }
+        )
     )
+
+    def proyecto_postulado(self, obj):
+        base = "padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;display:inline-block;"
+        postulado = "Proyecto postulado"
+        no_postulado= "Proyecto no postulado"
+        if obj.fecha_envio_postulacion_proyecto:
+            return format_html("<span style='{}background-color:#dcfce7;color:#166534;'>{}</span>",base,postulado)
+        return format_html("<span style='{}background-color:#fee2e2;color:#991b1b;'>{}</p>",base,no_postulado)

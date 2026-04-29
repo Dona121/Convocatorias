@@ -1,8 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from djmoney.models.fields import MoneyField
+from django.contrib.auth.models import User
 
 # Create your models here.
+
 
 class Dependencia(models.Model):
     dependencia = models.CharField(max_length=100)
@@ -116,7 +118,8 @@ class Convocatorias(models.Model):
         Dependencia
     )
     aliados = models.ManyToManyField(
-        Aliados
+        Aliados,
+        blank=True
     )
     objetivo = models.TextField(null=True)
     segmento = models.ManyToManyField(
@@ -138,6 +141,7 @@ class Convocatorias(models.Model):
     que_ofrece = models.TextField(null=True,blank=True)
     quienes_pueden_participar = models.TextField(null=True,blank=True)
     publico_priorizado = models.TextField(null=True,blank=True)
+    imagen_convocatoria = models.ImageField(null=True,blank=True)
     
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -159,6 +163,10 @@ class Proyecto(models.Model):
     municipios = models.ManyToManyField(
         Municipios
     )
+    aliados = models.ManyToManyField(
+        Aliados,
+        blank=True
+    )
     nombre_proyecto = models.TextField()
     bpin = models.CharField(max_length=20)
     dependencia = models.ForeignKey(
@@ -173,6 +181,12 @@ class Proyecto(models.Model):
         null=True,
         blank=False
     )
+
+    fecha_envio_postulacion_proyecto = models.DateTimeField(null=True,blank=True)
+    fecha_solicitud_subsanacion_proyecto = models.DateTimeField(null=True,blank=True)
+    fecha_envio_subsanciones_proyecto = models.DateTimeField(null=True,blank=True)
+    fecha_publicacion_resultados_proyecto = models.DateTimeField(null=True,blank=True)
+    
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 

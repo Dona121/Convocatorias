@@ -185,6 +185,23 @@ UNFOLD = {
         "command_search": True,
         "navigation": [
             {
+                "title" : "Administración de Usuarios",
+                "items" : [
+                    {
+                        "title" : "Grupos",
+                        "icon" : "groups",
+                        "link" : reverse_lazy("admin:auth_group_changelist"),
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
+                    },
+                    {
+                        "title" : "Usuarios",
+                        "icon" : "person",
+                        "link" : reverse_lazy("admin:auth_user_changelist"),
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
+                    }
+                ]
+            },
+            {
                 "separator":True,
                 "title": "Seguimiento",
                 "icon": "track_changes",
@@ -193,11 +210,17 @@ UNFOLD = {
                         "title": "Convocatorias",
                         "icon": "campaign",
                         "link": "/admin/contenido/convocatorias/",
+                        "permission" : lambda request: request.user.is_superuser 
+                        or request.user.groups.filter(name="Gestor de Convocatorias").exists()
+                        or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Proyectos",
                         "icon": "folder_open",
                         "link": "/admin/contenido/proyecto/",
+                        "permission" : lambda request: request.user.is_superuser 
+                        or request.user.groups.filter(name="Administrador").exists()
+                        or request.user.groups.filter(name="Seguimiento de Proyectos").exists()
                     },
                 ],
             },
@@ -209,61 +232,73 @@ UNFOLD = {
                         "title": "Dependencias",
                         "icon": "account_tree",
                         "link": "/admin/contenido/dependencia/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Responsables",
                         "icon": "person",
                         "link": "/admin/contenido/responsable/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Fuentes de Financiación",
                         "icon":"payments",
-                        "link": "/admin/contenido/clasificacionfuentefinanciacion/"
+                        "link": "/admin/contenido/clasificacionfuentefinanciacion/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Clasificación Aliados",
                         "icon": "bookmark",
                         "link": "/admin/contenido/clasificacionaliados/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Aliados",
                         "icon": "handshake",
                         "link": "/admin/contenido/aliados/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Segmentos",
                         "icon": "donut_small",
                         "link": "/admin/contenido/segmentos/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Sectores",
                         "icon": "category",
                         "link": "/admin/contenido/sectores/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Municipios",
                         "icon": "location_city",
                         "link": "/admin/contenido/municipios/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Ubicaciones",
                         "icon": "place",
                         "link": "/admin/contenido/ubicacion/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Tipos de beneficiario",
                         "icon": "group",
                         "link": "/admin/contenido/clasificacionbeneficiario/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Vigencias",
                         "icon": "calendar_month",
                         "link": "/admin/contenido/clasificacionvigencia/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                     {
                         "title": "Indicadores MGA",
                         "icon": "bar_chart",
                         "link": "/admin/contenido/clasificacionindicadormga/",
+                        "permission" : lambda request: request.user.is_superuser or request.user.groups.filter(name="Administrador").exists()
                     },
                 ],
             },
