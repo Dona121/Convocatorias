@@ -16,6 +16,7 @@ from pathlib import Path
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from urllib.parse import urlparse, parse_qsl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -97,20 +98,18 @@ WSGI_APPLICATION = 'convocatorias_seguimiento.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-# DATABASE = {
-#     "default" : dj_database_url.config(
-#         default=os.getenv("DATABASE_URL")
-#     )
-# }
+# Replace the DATABASES section of your settings.py with this
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("PGDATABASE"),
-        'USER': os.getenv("PGUSER"),
-        'PASSWORD': os.getenv("PGPASSWORD"),
-        'HOST': os.getenv("PGHOST"),
-        'PORT': os.getenv("PGPORT"),
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
     }
 }
 
