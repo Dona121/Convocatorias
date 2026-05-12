@@ -1,0 +1,141 @@
+/* ================================================= */
+/* TABLA BASE */
+/* ================================================= */
+
+.tabular-table {
+    border-collapse: separate !important;
+    border-spacing: 0 14px !important;
+    background: transparent !important;
+}
+
+/* ================================================= */
+/* TARJETA */
+/* ================================================= */
+
+.tabular-table tbody.has_original {
+
+    background: white;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.03),
+        0 4px 14px rgba(0,0,0,.04);
+}
+
+/* ================================================= */
+/* QUITAR GRID */
+/* ================================================= */
+
+.tabular-table td {
+    border-bottom: none !important;
+}
+
+/* ================================================= */
+/* CELDAS */
+/* ================================================= */
+
+.field-tabular {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    background: transparent !important;
+}
+
+/* ================================================= */
+/* FECHA */
+/* ================================================= */
+
+.field-fecha_creacion {
+    width: 260px !important;
+}
+
+.field-fecha_creacion .readonly {
+
+    background: #f8fafc !important;
+
+    border: 1px solid rgba(0,0,0,.05) !important;
+
+    border-radius: 12px !important;
+
+    padding: 10px 14px !important;
+
+    font-size: .85rem;
+
+    white-space: nowrap;
+}
+
+/* ================================================= */
+/* COMENTARIO */
+/* ================================================= */
+
+.field-comentario {
+    padding-left: 6px !important;
+}
+
+.field-comentario textarea {
+
+    min-height: 95px !important;
+
+    border-radius: 14px !important;
+
+    border: 1px solid rgba(0,0,0,.08) !important;
+
+    background: #fcfcfd !important;
+
+    padding: 14px !important;
+
+    font-size: .92rem !important;
+
+    line-height: 1.45 !important;
+
+    transition: border-color .2s ease,
+                box-shadow .2s ease !important;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,.03);
+}
+
+/* focus */
+
+.field-comentario textarea:focus {
+
+    background: white !important;
+
+    border-color: #2563eb !important;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.08) !important;
+}
+
+/* ================================================= */
+/* CHECKBOX */
+/* ================================================= */
+
+.delete {
+    vertical-align: middle !important;
+    padding-top: 28px !important;
+    width: 70px !important;
+}
+
+.delete input {
+    transform: scale(1.05);
+}
+
+/* ================================================= */
+/* HEADER */
+/* ================================================= */
+
+.tabular-table thead th {
+
+    border-bottom: none !important;
+
+    font-size: .78rem !important;
+
+    text-transform: uppercase;
+
+    letter-spacing: .03em;
+
+    opacity: .65;
+}

@@ -30,6 +30,16 @@ class Responsable(models.Model):
     def __str__(self):
         return f"{self.responsable}"
     
+class PerfilUsuario(models.Model):
+    usuario = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE
+    )
+    dependencia = models.ManyToManyField(
+        Dependencia,blank=True
+    )
+
+    
 class ClasificacionAliados(models.Model):
     clasificacion_aliado = models.CharField(max_length=150)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -129,6 +139,7 @@ class Convocatorias(models.Model):
     fecha_cierre = models.DateTimeField(null=True, blank=True)
     estado_monto = models.CharField(max_length=2,choices=[("ES","Especifica"),("NE","No especifica")],null=True)
     monto = MoneyField(decimal_places=4, max_digits=19,null=True,default_currency='COP',blank=True)
+    observaciones_monto = models.TextField(null=True,blank=True)
     sectores = models.ManyToManyField(
         Sectores
     )
@@ -168,7 +179,7 @@ class Proyecto(models.Model):
         blank=True
     )
     nombre_proyecto = models.TextField()
-    bpin = models.CharField(max_length=20)
+    bpin = models.CharField(max_length=20,blank=True)
     dependencia = models.ForeignKey(
         Dependencia,
         on_delete=models.CASCADE,
@@ -197,6 +208,22 @@ class Proyecto(models.Model):
     def __str__(self):
         return f"{self.nombre_proyecto}" 
     
+
+class ComentariosProyectos(models.Model):
+    proyecto = models.ForeignKey(
+        Proyecto,
+        on_delete=models.CASCADE
+    )
+    comentario = models.TextField(blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Comentario"
+        verbose_name_plural = "Comentarios"
+
+    def __str__(self):
+        return f"Comentario - {self.proyecto.nombre_proyecto} realizado {self.fecha_creacion}"
 
 class ClasificacionBeneficiario(models.Model):
     tipo_beneficiario = models.CharField(max_length=40)

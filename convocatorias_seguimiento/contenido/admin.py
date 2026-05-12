@@ -1,6 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
-from unfold.admin import TabularInline
+from unfold.admin import TabularInline, StackedInline
 from contenido import models
 from contenido import forms
 from unfold.sections import TableSection, TemplateSection
@@ -9,11 +9,26 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
+from django.templatetags.static import static
+
+
+class PerfilUsuarioInline(StackedInline):
+    model = models.PerfilUsuario
+    can_delete = False
+    filter_horizontal = ("dependencia",)
+
+class UsuarioAdmin(BaseUserAdmin):
+    inlines = [PerfilUsuarioInline]
+
+admin.site.unregister(User)
+admin.site.register(User, UsuarioAdmin)
 
 class BeneficiariosInline(TabularInline):
     model = models.Beneficiarios
     form = forms.BeneficiariosForm
-    extra = 1
+    extra = 0
     tab = True
     verbose_name = "Beneficiario"
     verbose_name_plural = "Beneficiarios"
@@ -23,10 +38,33 @@ class BeneficiariosInline(TabularInline):
     autocomplete_fields = ("beneficiario",)
     list_fullwidth = True
 
+class ComentariosInline(TabularInline):
+    model = models.ComentariosProyectos
+    form = forms.ComentariosDelProyecto
+    class Media:
+        css = {
+            "all" : (
+                "css/comentarios.css",
+            )
+        }
+
+    extra = 0
+    tab = True
+
+    readonly_fields = ("fecha_creacion",)
+
+    fields = (
+        "fecha_creacion",
+        "comentario",
+    )
+    show_count = True
+    hide_title = True
+    can_delete = True
+
 class FuentesInline(TabularInline):
     model = models.FuenteFinanciacion
     form = forms.FuentesForm
-    extra = 1
+    extra = 0
     tab = True
     verbose_name = "Fuente de Financiación"
     verbose_name_plural = "Fuentes de Financiación"
@@ -40,7 +78,7 @@ class FuentesInline(TabularInline):
 class IndicadoresInline(TabularInline):
     model = models.IndicadorMGA
     form = forms.IndicadoresForm
-    extra = 1
+    extra = 0
     tab = True
     verbose_name = "Indicador MGA"
     verbose_name_plural = "Indicadores MGA"
@@ -192,7 +230,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     list_display = (
         "id",
         "nombre_convocatoria",
-        "monto", 
+        "monto",
         "estado",
         'numero_proyectos',
         "fecha_creacion",
@@ -211,7 +249,8 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
             "fields": (
                 "nombre_convocatoria",
                 "estado_monto",
-                "monto", 
+                "monto",
+                "observaciones_monto",
                 "contacto",
                 "objetivo",
                 "enlace_convocatoria",
@@ -282,7 +321,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
     
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin):
-    inlines = (BeneficiariosInline, IndicadoresInline,FuentesInline)
+    inlines = (BeneficiariosInline, IndicadoresInline,FuentesInline,ComentariosInline)
     list_display = (
         "id",
         "nombre_proyecto",
@@ -292,7 +331,8 @@ class ProyectoAdmin(UnfoldModelAdmin):
         "bpin",
         "proyecto_postulado",
     )
-    autocomplete_fields = ("convocatoria","dependencia","responsable")
+    autocomplete_fields = ("dependencia","responsable")
+    raw_id_fields = ("convocatoria",)
     list_filter = ("dependencia", "responsable", "convocatoria")
     search_fields = ("nombre_proyecto", "bpin","convocatoria")
     list_display_links = ("id","nombre_proyecto")
