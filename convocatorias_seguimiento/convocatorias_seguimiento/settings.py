@@ -296,6 +296,28 @@ UNFOLD = {
                     },
                 ],
             },
+            {
+                "title" : "Modelo de Relaciones",
+                "icon": "settings",
+                "items" : [
+                    {
+                        "title" : "Beneficiarios Proyectos",
+                        "icon" : "group",
+                        "link" : reverse_lazy("admin:contenido_beneficiarios_changelist")
+                    },
+                    {
+                        "title" : "Indicadores Proyectos",
+                        "icon" : "bar_chart",
+                        "link" : reverse_lazy("admin:contenido_indicadormga_changelist")
+                    },
+                    {
+                        "title" : "Fuentes Proyectos",
+                        "icon" : "payments",
+                        "link" : reverse_lazy("admin:contenido_fuentefinanciacion_changelist")
+                    }
+                ],
+                "permission" : lambda request: request.user.is_superuser
+            }
         ]
     },
 "COLORS": {

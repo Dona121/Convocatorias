@@ -480,3 +480,40 @@ class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
 
     def has_export_permission(self, request):
         return request.user.is_superuser
+    
+
+@admin.register(models.Beneficiarios)
+class BeneficiariosProyectosAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
+    list_display = ("beneficiario","proyecto","numero_beneficiarios",)
+
+    def has_import_permission(self,request):
+        return request.user.is_superuser
+    
+    def has_export_permission(self,request):
+        return request.user.is_superuser
+
+@admin.register(models.IndicadorMGA)
+class IndicadoresProyectosAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
+    list_display = ("vigencia","indicadores","proyecto","meta_proyecto")
+
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+    
+    def has_export_permission(self, request):
+            return request.user.is_superuser
+    
+@admin.register(models.FuenteFinanciacion)
+class FuentesProyectosAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
+    list_display = ("vigencia","fuente","proyecto","valor_comprometido","valor_pagado")
+
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+    
+    def has_export_permission(self, request):
+            return request.user.is_superuser

@@ -125,7 +125,8 @@ class Ubicacion(models.Model):
 class Convocatorias(models.Model):
     nombre_convocatoria = models.TextField()
     dependencia = models.ManyToManyField(
-        Dependencia
+        Dependencia,
+        blank=True
     )
     aliados = models.ManyToManyField(
         Aliados,
@@ -133,21 +134,24 @@ class Convocatorias(models.Model):
     )
     objetivo = models.TextField(null=True)
     segmento = models.ManyToManyField(
-        Segmentos
+        Segmentos,
+        blank=True
     ) 
-    fecha_apertura = models.DateTimeField()
+    fecha_apertura = models.DateTimeField(blank=True)
     fecha_cierre = models.DateTimeField(null=True, blank=True)
     estado_monto = models.CharField(max_length=2,choices=[("ES","Especifica"),("NE","No especifica")],null=True)
     monto = MoneyField(decimal_places=4, max_digits=19,null=True,default_currency='COP',blank=True)
     observaciones_monto = models.TextField(null=True,blank=True)
     sectores = models.ManyToManyField(
-        Sectores
+        Sectores,
+        blank=True
     )
     ubicacion = models.ManyToManyField(
-        Ubicacion
+        Ubicacion,
+        blank=True
     )
-    enlace_convocatoria = models.CharField(max_length=250,null=True)
-    enlace_del_actor = models.CharField(max_length=250,null=True)
+    enlace_convocatoria = models.CharField(max_length=250,null=True,blank=True)
+    enlace_del_actor = models.CharField(max_length=250,null=True,blank=True)
     contacto = models.EmailField(max_length=100,null=True,blank=True)
     que_ofrece = models.TextField(null=True,blank=True)
     quienes_pueden_participar = models.TextField(null=True,blank=True)
@@ -172,7 +176,8 @@ class Proyecto(models.Model):
         blank=False
     )
     municipios = models.ManyToManyField(
-        Municipios
+        Municipios,
+        blank=True
     )
     aliados = models.ManyToManyField(
         Aliados,
@@ -236,7 +241,6 @@ class ClasificacionBeneficiario(models.Model):
 
     def __str__(self):
         return f"{self.tipo_beneficiario}"
-
 
 class Beneficiarios(models.Model):
     beneficiario = models.ForeignKey(
