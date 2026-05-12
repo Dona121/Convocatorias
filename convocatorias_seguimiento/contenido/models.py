@@ -241,7 +241,6 @@ class ClasificacionBeneficiario(models.Model):
 class Beneficiarios(models.Model):
     beneficiario = models.ForeignKey(
         ClasificacionBeneficiario,
-        # 
         on_delete=models.CASCADE,
         null=True,
         blank=False

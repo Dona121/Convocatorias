@@ -12,6 +12,10 @@ from django.urls import reverse
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.templatetags.static import static
+from django.contrib.admin import register
+from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+from import_export.admin import ImportExportModelAdmin
+from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
 
 
 class PerfilUsuarioInline(StackedInline):
@@ -23,7 +27,12 @@ class UsuarioAdmin(BaseUserAdmin):
     inlines = [PerfilUsuarioInline]
 
 admin.site.unregister(User)
-admin.site.register(User, UsuarioAdmin)
+
+@register(User)
+class UserAdmin(UsuarioAdmin,UnfoldModelAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+    change_password_form = AdminPasswordChangeForm
 
 class BeneficiariosInline(TabularInline):
     model = models.Beneficiarios
@@ -110,69 +119,147 @@ class SeccionProyectos(TableSection):
         return format_html("<span style='{}background-color:#fee2e2;color:#991b1b;'>{}</p>",base,no_postulado)
 
 @admin.register(models.Dependencia)
-class DependenciaAdmin(UnfoldModelAdmin):
+class DependenciaAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("dependencia", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("dependencia",)
     ordering = ("dependencia",)
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
+
 
 @admin.register(models.Responsable)
-class ResponsableAdmin(UnfoldModelAdmin):
+class ResponsableAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("responsable", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("responsable",)
     ordering = ("responsable",)
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
 
 @admin.register(models.ClasificacionAliados)
-class ClasificacionAliadosAdmin(UnfoldModelAdmin):
+class ClasificacionAliadosAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("clasificacion_aliado",)
+
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
 
 
 @admin.register(models.Aliados)
-class AliadosAdmin(UnfoldModelAdmin):
+class AliadosAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("clasificacion","aliado", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("aliado",)
     ordering = ("aliado",)
+
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
     
 
 @admin.register(models.Segmentos)
-class SegmentosAdmin(UnfoldModelAdmin):
+class SegmentosAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("segmento", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("segmento",)
     ordering = ("segmento",)
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
+
 
 @admin.register(models.Sectores)
-class SectoresAdmin(UnfoldModelAdmin):
+class SectoresAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("codigo_sector", "sector", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("codigo_sector", "sector")
     ordering = ("codigo_sector",)
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
+
 @admin.register(models.ClasificacionFuenteFinanciacion)
-class EstadoAdmin(UnfoldModelAdmin):
+class EstadoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("tipo_de_fuente","subtipo","fuente")
     search_fields = ("tipo_de_fuente","subtipo","fuente")
     ordering = ("fecha_creacion",)
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
+
 @admin.register(models.Municipios)
-class MunicipiosAdmin(UnfoldModelAdmin):
+class MunicipiosAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("municipio", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("municipio",)
     ordering = ("municipio",)
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
 
 @admin.register(models.Ubicacion)
-class UbicacionAdmin(UnfoldModelAdmin):
+class UbicacionAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("ubicacion", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("ubicacion",)
     ordering = ("ubicacion",)
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
+
 
 @admin.register(models.ClasificacionBeneficiario)
-class ClasificacionBeneficiarioAdmin(UnfoldModelAdmin):
+class ClasificacionBeneficiarioAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ("tipo_beneficiario", "fecha_creacion", "fecha_actualizacion")
     search_fields = ("tipo_beneficiario",)
     ordering = ("tipo_beneficiario",)
+
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
 
 
 @admin.register(models.ClasificacionVigencia)
@@ -182,7 +269,9 @@ class VigenciaAdmin(UnfoldModelAdmin):
 
 
 @admin.register(models.ClasificacionIndicadorMGA)
-class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
+class ClasificacionIndicadorAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = (
         "codigo_meta", 
         "codigo_indicador", 
@@ -220,9 +309,16 @@ class ClasificacionIndicadorAdmin(UnfoldModelAdmin):
     def meta_fisica_esp_2027(self, obj):
         return f"{obj.meta_fisica_esperada_2027:,.2f}" if obj.meta_fisica_esperada_2027 is not None else "-"
 
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
 
 @admin.register(models.Convocatorias)
-class ConvocatoriasAdmin(UnfoldModelAdmin):
+class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     conditional_fields = {
         "monto" : "estado_monto == 'ES'"
     }
@@ -318,9 +414,17 @@ class ConvocatoriasAdmin(UnfoldModelAdmin):
                     "<span style='{}background-color:#dcfce7;color:#166534;'>{} días para cierre</span>", base, dias
                 )
         return "Pendiente asignar fecha"
+
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
     
 @admin.register(models.Proyecto)
-class ProyectoAdmin(UnfoldModelAdmin):
+class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     inlines = (BeneficiariosInline, IndicadoresInline,FuentesInline,ComentariosInline)
     list_display = (
         "id",
@@ -338,6 +442,7 @@ class ProyectoAdmin(UnfoldModelAdmin):
     list_display_links = ("id","nombre_proyecto")
     filter_horizontal = ("municipios",)
     ordering = ("id",)
+    readonly_fields = ("fecha_creacion","fecha_actualizacion")
     fieldsets = (
         ("Información general", {
             "fields": (
@@ -356,7 +461,7 @@ class ProyectoAdmin(UnfoldModelAdmin):
             "fields" : ("aliados",)
         }),
         ("Fechas de Trazabilidad" , {
-            "fields" : ("fecha_envio_postulacion_proyecto","fecha_solicitud_subsanacion_proyecto",
+            "fields" : ("fecha_creacion","fecha_actualizacion","fecha_envio_postulacion_proyecto","fecha_solicitud_subsanacion_proyecto",
                         "fecha_envio_subsanciones_proyecto","fecha_publicacion_resultados_proyecto")
         }
         )
@@ -369,3 +474,9 @@ class ProyectoAdmin(UnfoldModelAdmin):
         if obj.fecha_envio_postulacion_proyecto:
             return format_html("<span style='{}background-color:#dcfce7;color:#166534;'>{}</span>",base,postulado)
         return format_html("<span style='{}background-color:#fee2e2;color:#991b1b;'>{}</p>",base,no_postulado)
+
+    def has_import_permission(self, request):
+        return request.user.is_superuser
+
+    def has_export_permission(self, request):
+        return request.user.is_superuser
