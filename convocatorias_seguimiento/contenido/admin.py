@@ -16,7 +16,8 @@ from django.contrib.admin import register
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from import_export.admin import ImportExportModelAdmin
 from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
-
+from guardian.admin import GuardedModelAdmin
+from django.db.models import Prefetch
 
 class PerfilUsuarioInline(StackedInline):
     model = models.PerfilUsuario
@@ -29,7 +30,7 @@ class UsuarioAdmin(BaseUserAdmin):
 admin.site.unregister(User)
 
 @register(User)
-class UserAdmin(UsuarioAdmin,UnfoldModelAdmin):
+class UserAdmin(GuardedModelAdmin,UsuarioAdmin,UnfoldModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
@@ -46,6 +47,15 @@ class BeneficiariosInline(TabularInline):
     can_delete = True
     autocomplete_fields = ("beneficiario",)
     list_fullwidth = True
+
+    def has_view_permission(self, request,obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
+    
+    def has_change_permission(self, request, obj =None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
+    
+    def has_add_permission(self, request, obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
 
 class ComentariosInline(TabularInline):
     model = models.ComentariosProyectos
@@ -70,6 +80,15 @@ class ComentariosInline(TabularInline):
     hide_title = True
     can_delete = True
 
+    def has_view_permission(self, request,obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
+    
+    def has_change_permission(self, request, obj =None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
+    
+    def has_add_permission(self, request, obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
+
 class FuentesInline(TabularInline):
     model = models.FuenteFinanciacion
     form = forms.FuentesForm
@@ -83,6 +102,15 @@ class FuentesInline(TabularInline):
     ordering_field = "id"
     autocomplete_fields = ("fuente","vigencia")
     list_fullwidth = True
+
+    def has_view_permission(self, request,obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
+    
+    def has_change_permission(self, request, obj =None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
+    
+    def has_add_permission(self, request, obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos")
 
 class IndicadoresInline(TabularInline):
     model = models.IndicadorMGA
@@ -117,6 +145,7 @@ class SeccionProyectos(TableSection):
         if obj.fecha_envio_postulacion_proyecto:
             return format_html("<span style='{}background-color:#dcfce7;color:#166534;'>{}</span>",base,postulado)
         return format_html("<span style='{}background-color:#fee2e2;color:#991b1b;'>{}</p>",base,no_postulado)
+    
 
 @admin.register(models.Dependencia)
 class DependenciaAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
@@ -368,14 +397,32 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
             )
         }),
     )
+    
     def get_queryset(self, request):
-        return (
-            super()
-            .get_queryset(request)
-            .prefetch_related(
-                "proyecto_set",
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        try:
+            usuario_actual = request.user.perfilusuario
+            dependencias = [id_dependencia.id for id_dependencia in usuario_actual.dependencia.all()]
+
+            return (
+                qs.filter(dependencia__id__in=dependencias).distinct()
+                .prefetch_related(
+                    Prefetch(
+                        "proyecto_set",
+                        queryset=models.Proyecto.objects.filter(
+                            dependencia__in=dependencias
+                        )
+                    )
+                )
             )
-        )
+
+        except models.PerfilUsuario.DoesNotExist:
+            return qs.none()
+            
 
     def numero_proyectos(self,obj):
         proyectos = obj.proyecto_set.all()
@@ -480,6 +527,19 @@ class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
 
     def has_export_permission(self, request):
         return request.user.is_superuser
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        try:
+            usuario_actual = request.user.perfilusuario
+            dependencias = usuario_actual.dependencia.all()
+            return qs.filter(dependencia__in=dependencias)
+        except models.PerfilUsuario.DoesNotExist:
+            return qs.none()
     
 
 @admin.register(models.Beneficiarios)

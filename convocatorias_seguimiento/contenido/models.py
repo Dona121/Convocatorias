@@ -137,7 +137,7 @@ class Convocatorias(models.Model):
         Segmentos,
         blank=True
     ) 
-    fecha_apertura = models.DateTimeField(blank=True)
+    fecha_apertura = models.DateTimeField(null=True,blank=True)
     fecha_cierre = models.DateTimeField(null=True, blank=True)
     estado_monto = models.CharField(max_length=2,choices=[("ES","Especifica"),("NE","No especifica")],null=True)
     monto = MoneyField(decimal_places=4, max_digits=19,null=True,default_currency='COP',blank=True)

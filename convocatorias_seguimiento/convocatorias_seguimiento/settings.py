@@ -39,6 +39,7 @@ ALLOWED_HOSTS = ["*",]
 INSTALLED_APPS = [
     'unfold',
     'unfold.contrib.import_export',
+    'unfold.contrib.guardian',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'contenido',
     'djmoney',
     'import_export',
+    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +92,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'convocatorias_seguimiento.wsgi.application'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 
 # Database
@@ -207,6 +214,7 @@ UNFOLD = {
                         "permission" : lambda request: request.user.is_superuser 
                         or request.user.groups.filter(name="Gestor de Convocatorias").exists()
                         or request.user.groups.filter(name="Administrador").exists()
+                        or request.user.groups.filter(name="Seguimiento de Proyectos").exists()
                     },
                     {
                         "title": "Proyectos",
@@ -303,20 +311,22 @@ UNFOLD = {
                     {
                         "title" : "Beneficiarios Proyectos",
                         "icon" : "group",
-                        "link" : reverse_lazy("admin:contenido_beneficiarios_changelist")
+                        "link" : reverse_lazy("admin:contenido_beneficiarios_changelist"),
+                        "permission" : lambda request: request.user.is_superuser
                     },
                     {
                         "title" : "Indicadores Proyectos",
                         "icon" : "bar_chart",
-                        "link" : reverse_lazy("admin:contenido_indicadormga_changelist")
+                        "link" : reverse_lazy("admin:contenido_indicadormga_changelist"),
+                        "permission" : lambda request: request.user.is_superuser
                     },
                     {
                         "title" : "Fuentes Proyectos",
                         "icon" : "payments",
-                        "link" : reverse_lazy("admin:contenido_fuentefinanciacion_changelist")
+                        "link" : reverse_lazy("admin:contenido_fuentefinanciacion_changelist"),
+                        "permission" : lambda request: request.user.is_superuser
                     }
                 ],
-                "permission" : lambda request: request.user.is_superuser
             }
         ]
     },
