@@ -152,7 +152,7 @@ class Convocatorias(models.Model):
     )
     enlace_convocatoria = models.CharField(max_length=250,null=True,blank=True)
     enlace_del_actor = models.CharField(max_length=250,null=True,blank=True)
-    contacto = models.EmailField(max_length=100,null=True,blank=True)
+    contacto = models.EmailField(max_length=300,null=True,blank=True)
     que_ofrece = models.TextField(null=True,blank=True)
     quienes_pueden_participar = models.TextField(null=True,blank=True)
     publico_priorizado = models.TextField(null=True,blank=True)
