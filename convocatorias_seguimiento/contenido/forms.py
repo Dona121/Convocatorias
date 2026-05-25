@@ -35,7 +35,6 @@ class ComentariosDelProyecto(forms.ModelForm):
                         dark:border-gray-700
                         shadow-sm
                     """,
-                    "placeholder": "Escriba un comentario..."
                 }
             )
         }

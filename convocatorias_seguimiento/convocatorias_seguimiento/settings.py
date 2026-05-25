@@ -174,7 +174,7 @@ UNFOLD = {
     "SHOW_VIEW_ON_SITE": True,
     "SHOW_BACK_BUTTON": True,
     "SHOW_LANGUAGES": True,
-    "BORDER_RADIUS": "6px",
+    "BORDER_RADIUS": "4px",
     "SITE_TITLE": "Convocatorias",
     "SITE_HEADER": "Convocatorias",
     "SITE_SYMBOL": "campaign",

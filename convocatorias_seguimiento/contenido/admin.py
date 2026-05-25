@@ -48,24 +48,37 @@ class BeneficiariosInline(TabularInline):
     autocomplete_fields = ("beneficiario",)
     list_fullwidth = True
 
+
     def has_view_permission(self, request,obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
     
     def has_change_permission(self, request, obj =None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
-    
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
+        
     def has_add_permission(self, request, obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
 
-class ComentariosInline(TabularInline):
+class ComentariosInline(StackedInline):
     model = models.ComentariosProyectos
     form = forms.ComentariosDelProyecto
-    class Media:
-        css = {
-            "all" : (
-                "css/comentarios.css",
-            )
-        }
+    # class Media:
+    #     css = {
+    #         "all" : (
+    #             "css/comentarios.css",
+    #         )
+    #     }
 
     extra = 1
     tab = True
@@ -79,17 +92,30 @@ class ComentariosInline(TabularInline):
     show_count = True
     hide_title = True
     can_delete = True
+    collapsible = True
 
     def has_view_permission(self, request,obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
     
     def has_change_permission(self, request, obj =None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
-    
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
+        
     def has_add_permission(self, request, obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
-
-class FuentesInline(TabularInline):
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
+    
+class FuentesInline(StackedInline):
     model = models.FuenteFinanciacion
     form = forms.FuentesForm
     extra = 1
@@ -102,15 +128,28 @@ class FuentesInline(TabularInline):
     ordering_field = "id"
     autocomplete_fields = ("fuente","vigencia")
     list_fullwidth = True
+    collapsible = True
 
     def has_view_permission(self, request,obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
     
     def has_change_permission(self, request, obj =None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
-    
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
+        
     def has_add_permission(self, request, obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
 
 class IndicadoresInline(TabularInline):
     model = models.IndicadorMGA
@@ -127,13 +166,25 @@ class IndicadoresInline(TabularInline):
     list_fullwidth = True
 
     def has_view_permission(self, request,obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
     
     def has_change_permission(self, request, obj =None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
-    
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
+        
     def has_add_permission(self, request, obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+        return (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Seguimiento de Proyectos") 
+            or request.user.groups.filter(name="Administrador")
+        )
 
 class SeccionProyectos(TableSection):
     verbose_name = "Proyectos"
