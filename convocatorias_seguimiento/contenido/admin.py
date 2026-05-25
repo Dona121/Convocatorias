@@ -18,6 +18,7 @@ from import_export.admin import ImportExportModelAdmin
 from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
 from guardian.admin import GuardedModelAdmin
 from django.db.models import Prefetch
+from django.template.defaultfilters import truncatechars
 
 class PerfilUsuarioInline(StackedInline):
     model = models.PerfilUsuario
@@ -414,11 +415,13 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
     list_per_page = 20
     list_display = (
         "id",
-        "nombre_convocatoria",
+        "nombre_convocatoria_recortada",
         "monto",
+        "fecha_apertura",
+        "fecha_cierre",
         "estado",
         'numero_proyectos',
-        "fecha_creacion",
+        "enlace_convocatoria",
     )
     list_sections = [
         SeccionProyectos
@@ -528,6 +531,11 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
     def has_export_permission(self, request):
         return request.user.is_superuser
     
+    def nombre_convocatoria_recortada(self, obj):
+        return truncatechars(obj.nombre_convocatoria,50)
+    
+    nombre_convocatoria_recortada.short_description = "Nombre de la Convocatoria"
+    
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
     import_form_class = ImportForm
@@ -535,12 +543,13 @@ class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
     inlines = (BeneficiariosInline, IndicadoresInline,FuentesInline,ComentariosInline)
     list_display = (
         "id",
-        "nombre_proyecto",
+        "nombre_proyecto_recortado",
+        "bpin",
         "convocatoria",
         "dependencia",
         "responsable", 
-        "bpin",
         "proyecto_postulado",
+        "fecha_envio_postulacion_proyecto"
     )
     autocomplete_fields = ("dependencia","responsable")
     raw_id_fields = ("convocatoria",)
@@ -600,6 +609,11 @@ class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
             return qs.filter(dependencia__in=dependencias)
         except models.PerfilUsuario.DoesNotExist:
             return qs.none()
+    
+    def nombre_proyecto_recortado(self, obj):
+        return truncatechars(obj.nombre_proyecto,50)
+    
+    nombre_proyecto_recortado.short_description = "Nombre del Proyecto"
     
 
 @admin.register(models.Beneficiarios)
