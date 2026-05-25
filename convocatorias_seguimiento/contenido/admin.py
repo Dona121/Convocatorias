@@ -38,7 +38,7 @@ class UserAdmin(GuardedModelAdmin,UsuarioAdmin,UnfoldModelAdmin):
 class BeneficiariosInline(TabularInline):
     model = models.Beneficiarios
     form = forms.BeneficiariosForm
-    extra = 0
+    extra = 1
     tab = True
     verbose_name = "Beneficiario"
     verbose_name_plural = "Beneficiarios"
@@ -49,13 +49,13 @@ class BeneficiariosInline(TabularInline):
     list_fullwidth = True
 
     def has_view_permission(self, request,obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
     
     def has_change_permission(self, request, obj =None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
     
     def has_add_permission(self, request, obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
 
 class ComentariosInline(TabularInline):
     model = models.ComentariosProyectos
@@ -67,7 +67,7 @@ class ComentariosInline(TabularInline):
             )
         }
 
-    extra = 0
+    extra = 1
     tab = True
 
     readonly_fields = ("fecha_creacion",)
@@ -81,18 +81,18 @@ class ComentariosInline(TabularInline):
     can_delete = True
 
     def has_view_permission(self, request,obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
     
     def has_change_permission(self, request, obj =None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
     
     def has_add_permission(self, request, obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
 
 class FuentesInline(TabularInline):
     model = models.FuenteFinanciacion
     form = forms.FuentesForm
-    extra = 0
+    extra = 1
     tab = True
     verbose_name = "Fuente de Financiación"
     verbose_name_plural = "Fuentes de Financiación"
@@ -104,18 +104,18 @@ class FuentesInline(TabularInline):
     list_fullwidth = True
 
     def has_view_permission(self, request,obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
     
     def has_change_permission(self, request, obj =None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
     
     def has_add_permission(self, request, obj=None):
-        return request.user.groups.filter(name="Seguimiento de Proyectos")
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
 
 class IndicadoresInline(TabularInline):
     model = models.IndicadorMGA
     form = forms.IndicadoresForm
-    extra = 0
+    extra = 1
     tab = True
     verbose_name = "Indicador MGA"
     verbose_name_plural = "Indicadores MGA"
@@ -125,6 +125,15 @@ class IndicadoresInline(TabularInline):
     ordering_field = "id"
     autocomplete_fields = ("indicadores","vigencia")
     list_fullwidth = True
+
+    def has_view_permission(self, request,obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+    
+    def has_change_permission(self, request, obj =None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
+    
+    def has_add_permission(self, request, obj=None):
+        return request.user.groups.filter(name="Seguimiento de Proyectos") or request.user.groups.filter(name="Administrador")
 
 class SeccionProyectos(TableSection):
     verbose_name = "Proyectos"
@@ -485,7 +494,7 @@ class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
     autocomplete_fields = ("dependencia","responsable")
     raw_id_fields = ("convocatoria",)
     list_filter = ("dependencia", "responsable", "convocatoria")
-    search_fields = ("nombre_proyecto", "bpin","convocatoria")
+    search_fields = ("nombre_proyecto", "bpin","convocatoria__nombre_convocatoria")
     list_display_links = ("id","nombre_proyecto")
     filter_horizontal = ("municipios",)
     ordering = ("id",)

@@ -1,16 +1,8 @@
-/* ================================================= */
-/* TABLA BASE */
-/* ================================================= */
-
 .tabular-table {
     border-collapse: separate !important;
     border-spacing: 0 14px !important;
     background: transparent !important;
 }
-
-/* ================================================= */
-/* TARJETA */
-/* ================================================= */
 
 .tabular-table tbody.has_original {
 
@@ -25,27 +17,15 @@
         0 4px 14px rgba(0,0,0,.04);
 }
 
-/* ================================================= */
-/* QUITAR GRID */
-/* ================================================= */
-
 .tabular-table td {
     border-bottom: none !important;
 }
-
-/* ================================================= */
-/* CELDAS */
-/* ================================================= */
 
 .field-tabular {
     padding-top: 14px !important;
     padding-bottom: 14px !important;
     background: transparent !important;
 }
-
-/* ================================================= */
-/* FECHA */
-/* ================================================= */
 
 .field-fecha_creacion {
     width: 260px !important;
@@ -65,10 +45,6 @@
 
     white-space: nowrap;
 }
-
-/* ================================================= */
-/* COMENTARIO */
-/* ================================================= */
 
 .field-comentario {
     padding-left: 6px !important;
@@ -97,8 +73,6 @@
         inset 0 1px 2px rgba(0,0,0,.03);
 }
 
-/* focus */
-
 .field-comentario textarea:focus {
 
     background: white !important;
@@ -109,10 +83,6 @@
         0 0 0 3px rgba(37,99,235,.08) !important;
 }
 
-/* ================================================= */
-/* CHECKBOX */
-/* ================================================= */
-
 .delete {
     vertical-align: middle !important;
     padding-top: 28px !important;
@@ -122,10 +92,6 @@
 .delete input {
     transform: scale(1.05);
 }
-
-/* ================================================= */
-/* HEADER */
-/* ================================================= */
 
 .tabular-table thead th {
 
