@@ -18,7 +18,7 @@ from import_export.admin import ImportExportModelAdmin
 from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
 from guardian.admin import GuardedModelAdmin
 from django.db.models import Prefetch
-from django.template.defaultfilters import truncatechars
+from django.template.defaultfilters import truncatechars, truncatechars_html
 
 class PerfilUsuarioInline(StackedInline):
     model = models.PerfilUsuario
@@ -421,7 +421,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
         "fecha_cierre",
         "estado",
         'numero_proyectos',
-        "enlace_convocatoria",
+        "enlace_convocatoria_formato",
     )
     list_sections = [
         SeccionProyectos
@@ -535,7 +535,17 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
         return truncatechars(obj.nombre_convocatoria,50)
     
     nombre_convocatoria_recortada.short_description = "Nombre de la Convocatoria"
+
+    def enlace_convocatoria_formato(self, obj):
+        return (
+            truncatechars_html(
+                format_html("<a href='{}' style='text-decoration-line:underline'>{}</a>",obj.enlace_convocatoria,obj.enlace_convocatoria),
+                50
+            )
+        )
     
+    enlace_convocatoria_formato.short_description = "Enlace de la convocatoria"
+
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
     import_form_class = ImportForm
