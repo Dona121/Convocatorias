@@ -454,7 +454,7 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
     radio_fields = {"estado_monto":admin.HORIZONTAL}
     list_filter = ("segmento", "sectores")
     search_fields = ("nombre_convocatoria", "contacto", "que_ofrece")
-    list_display_links = ("id","nombre_convocatoria")
+    list_display_links = ("id","nombre_convocatoria","nombre_convocatoria_recortada")
     filter_horizontal = ("sectores", "aliados" ,"dependencia", "segmento", "ubicacion")
     ordering = ("id",)
     fieldsets = (
