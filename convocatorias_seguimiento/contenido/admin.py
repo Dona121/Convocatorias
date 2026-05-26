@@ -19,6 +19,10 @@ from unfold.contrib.import_export.forms import ExportForm, ImportForm, Selectabl
 from guardian.admin import GuardedModelAdmin
 from django.db.models import Prefetch
 from django.template.defaultfilters import truncatechars, truncatechars_html
+from django.views.generic import TemplateView
+from unfold.views import UnfoldModelAdminViewMixin
+from django.urls import path
+from django.shortcuts import get_object_or_404
 
 class PerfilUsuarioInline(StackedInline):
     model = models.PerfilUsuario
@@ -405,6 +409,27 @@ class ClasificacionIndicadorAdmin(UnfoldModelAdmin, ImportExportModelAdmin):
     def has_export_permission(self, request):
         return request.user.is_superuser
 
+class TarjetaConvocatoriaView(
+    UnfoldModelAdminViewMixin,
+    TemplateView
+):
+    title = "Tarjeta convocatoria"
+    permission_required = ()
+    template_name = "convocatoria.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        convocatoria = get_object_or_404(
+            models.Convocatorias,
+            pk=self.kwargs["object_id"]
+        )
+
+        context["convocatoria"] = convocatoria
+
+        return context
+
 @admin.register(models.Convocatorias)
 class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
     import_form_class = ImportForm
@@ -414,8 +439,8 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
     }
     list_per_page = 20
     list_display = (
-        "id",
         "nombre_convocatoria_recortada",
+        "detalle_convocatoria",
         "monto",
         "fecha_apertura",
         "fecha_cierre",
@@ -537,14 +562,49 @@ class ConvocatoriasAdmin(UnfoldModelAdmin,ImportExportModelAdmin):
     nombre_convocatoria_recortada.short_description = "Nombre de la Convocatoria"
 
     def enlace_convocatoria_formato(self, obj):
-        return (
-            truncatechars_html(
+        url_convocatoria = ""
+        if obj.enlace_convocatoria:
+            url_convocatoria = truncatechars_html(
                 format_html("<a href='{}' style='text-decoration-line:underline'>{}</a>",obj.enlace_convocatoria,obj.enlace_convocatoria),
                 50
-            )
-        )
+                )
+            return url_convocatoria
+        return url_convocatoria
+            
     
     enlace_convocatoria_formato.short_description = "Enlace de la convocatoria"
+
+    def get_urls(self):
+
+        custom_view = self.admin_site.admin_view(
+            TarjetaConvocatoriaView.as_view(
+                model_admin=self
+            )
+        )
+
+        custom_urls = [
+            path(
+                "<int:object_id>/",
+                custom_view,
+                name="tarjeta_convocatoria",
+            ),
+        ]
+
+        return custom_urls + super().get_urls()
+    
+    def detalle_convocatoria(self, obj):
+        url = reverse("admin:tarjeta_convocatoria", args=[obj.id])
+        return format_html(
+            '<a href="{}" style="display:inline-flex; align-items:center; gap:6px;">'
+            '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" '
+            'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+            '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'
+            '</svg>'
+            '</a>',
+            url
+        )
+
+    detalle_convocatoria.short_description = "Detalle"
 
 @admin.register(models.Proyecto)
 class ProyectoAdmin(UnfoldModelAdmin, ImportExportModelAdmin):

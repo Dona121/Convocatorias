@@ -180,6 +180,7 @@ UNFOLD = {
     "SITE_SYMBOL": "campaign",
     "STYLES" : [
         lambda request: static("css/sidebar.css"),
+        lambda request: "css/convocatorias.css",
     ],
     "SIDEBAR": {
         "show_search" : True,
