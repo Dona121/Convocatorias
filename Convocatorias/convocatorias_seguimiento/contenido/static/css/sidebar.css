@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
+
+*:not(.material-symbols-outlined):not(.material-icons) {
+    font-family: 'Montserrat', sans-serif !important;
+    font-feature-settings: "tnum" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-kerning: normal;
+}
+
+body {
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    color: #1e293b !important;
+}
+
+td, th {
+    letter-spacing: 0.008em;
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+    font-weight: 600 !important;
+}
+
+/* ============================================
+   SIDEBAR BASE — azul más claro
+   ============================================ */
+#nav-sidebar-inner {
+    background-color: oklch(32% 0.08 260) !important;
+    border-right: 1px solid oklch(38% 0.08 260) !important;
+}
+
+/* ============================================
+   TÍTULO DE LA APP
+   ============================================ */
+#nav-sidebar-inner #site-name a,
+#nav-sidebar-inner #site-name {
+    color: oklch(98% 0.01 260) !important;
+    opacity: 1 !important;
+}
+
+#nav-sidebar-inner .text-important {
+    color: oklch(96% 0.02 260) !important;
+}
+
+/* ============================================
+   ÍTEMS DE NAVEGACIÓN
+   ============================================ */
+#nav-sidebar-inner ol li a {
+    background-color: transparent !important;
+    color: oklch(96% 0.015 260) !important;
+}
+
+#nav-sidebar-inner ol li a span {
+    color: inherit !important;
+}
+
+/* ============================================
+   HOVER
+   ============================================ */
+#nav-sidebar-inner ol li a:hover {
+    background-color: oklch(40% 0.09 260) !important;
+    color: oklch(99% 0.01 260) !important;
+}
+
+/* ============================================
+   ÍTEM ACTIVO
+   ============================================ */
+#nav-sidebar-inner ol li a.active,
+#nav-sidebar-inner ol li a.font-semibold.text-primary-600 {
+    background-color: oklch(44% 0.15 260) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: inset 3px 0 0 #7b9fff !important;
+}
+
+/* ============================================
+   SECTION HEADERS
+   ============================================ */
+#nav-sidebar-inner h2 {
+    color: oklch(75% 0.05 260) !important;
+    font-weight: 700 !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+}
+
+/* ============================================
+   DIVISORES
+   ============================================ */
+#nav-sidebar-inner hr,
+#nav-sidebar-inner .border-base-200 {
+    border-color: oklch(38% 0.07 260) !important;
+}
+
+/* ============================================
+   ÍCONOS
+   ============================================ */
+#nav-sidebar-inner ol li a .material-symbols-outlined {
+    color: oklch(72% 0.07 260) !important;
+}
+
+#nav-sidebar-inner ol li a:hover .material-symbols-outlined {
+    color: oklch(90% 0.05 260) !important;
+}
+
+#nav-sidebar-inner ol li a.active .material-symbols-outlined {
+    color: oklch(85% 0.20 260) !important;
+}
+
+/* ============================================
+   BARRA DE BÚSQUEDA
+   ============================================ */
+#nav-sidebar-inner .bg-white {
+    background-color: oklch(37% 0.08 260) !important;
+    border-color: oklch(42% 0.07 260) !important;
+}
+
+#nav-sidebar-inner [x-on\:click="\$dispatch\(\'opencommand\'\)"] .text-font-subtle-light,
+#nav-sidebar-inner [x-on\:click="\$dispatch\(\'opencommand\'\)"] div {
+    color: oklch(78% 0.04 260) !important;
+}
+
+#nav-sidebar-inner .bg-white kbd {
+    background-color: oklch(32% 0.07 260) !important;
+    border-color: oklch(44% 0.07 260) !important;
+    color: oklch(72% 0.04 260) !important;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+#nav-sidebar-inner > div:last-child {
+    border-top-color: oklch(38% 0.07 260) !important;
+}
+
+#nav-sidebar-inner > div:last-child .font-semibold {
+    color: oklch(94% 0.02 260) !important;
+}
+
+#nav-sidebar-inner > div:last-child .text-subtle {
+    color: oklch(68% 0.04 260) !important;
+}
+
+#nav-sidebar-inner > div:last-child .bg-base-200 {
+    background-color: oklch(38% 0.09 260) !important;
+    color: oklch(92% 0.03 260) !important;
+}
+
+#nav-sidebar-inner > div:last-child [x-on\:click]:hover {
+    background-color: oklch(36% 0.08 260) !important;
+}
+
+/* ============================================
+   LEGIBILIDAD GENERAL — CONTENIDO PRINCIPAL
+   ============================================ */
+label.font-semibold,
+.text-font-important-light {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    color: #1e293b !important;
+    font-weight: 500 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8 !important;
+    font-weight: 400 !important;
+}
+
+fieldset h2 {
+    color: #334155 !important;
+    font-weight: 600 !important;
+}
+
+thead th {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+td {
+    color: #334155 !important;
+}
+
+ul[class*="border"] a {
+    color: #475569 !important;
+    font-weight: 500 !important;
+}
+
+h1,
+[class*="text-font-important"] {
+    color: #0f172a !important;
+}
+
+.text-xs,
+[class*="text-subtle"],
+[class*="text-font-subtle"] {
+    color: #64748b !important;
+}
+
+/* Restaurar semibold en sidebar */
+#nav-sidebar-inner h2 {
+    font-weight: 700 !important;
+}
+
+#nav-sidebar-inner ol li a span:not(.material-symbols-outlined) {
+    font-weight: 500 !important;
+}
+
+#nav-sidebar-inner ol li a.active span:not(.material-symbols-outlined),
+#nav-sidebar-inner ol li a.font-semibold span:not(.material-symbols-outlined) {
+    font-weight: 600 !important;
+}
+
+/* Restaurar menú desplegable del footer */
+#nav-sidebar-inner nav.absolute div,
+#nav-sidebar-inner nav.absolute a,
+#nav-sidebar-inner nav.absolute span,
+#nav-sidebar-inner nav.absolute button {
+    color: inherit !important;
+}
+
+/* Restaurar menú desplegable del footer completamente */
+#nav-sidebar-inner nav.absolute {
+    background-color: white !important;
+}
+
+#nav-sidebar-inner nav.absolute a,
+#nav-sidebar-inner nav.absolute button:not([type="submit"]#logout-form button),
+#nav-sidebar-inner nav.absolute span:not(.material-symbols-outlined) {
+    color: #374151 !important;
+}
+
+/* Botones de idioma */
+#nav-sidebar-inner nav.absolute button[type="submit"] {
+    color: #374151 !important;
+}
+
+/* "Cerrar sesión" mantiene su rojo */
+#nav-sidebar-inner nav.absolute button.text-red-700 {
+    color: #b91c1c !important;
+}
+
+#nav-sidebar-inner nav.absolute button.text-red-700 span {
+    color: #b91c1c !important;
+}
+
+/* El ítem activo (español) mantiene su azul */
+#nav-sidebar-inner nav.absolute button.text-primary-600 {
+    color: #2563eb !important;
+}
+
+/* Angie Leal / email en el footer — restaurar */
+#nav-sidebar-inner > div:last-child .font-semibold {
+    color: oklch(94% 0.02 260) !important;
+}
+
+#nav-sidebar-inner > div:last-child .text-subtle,
+#nav-sidebar-inner > div:last-child .text-xs {
+    color: oklch(68% 0.04 260) !important;
+}
+
+/* ============================================
+   SEPARADORES DE SECCIÓN — estilo línea completa
+   ============================================ */
+#nav-sidebar-inner hr {
+    border-color: oklch(42% 0.07 260) !important;
+    margin: 4px 0 !important;
+}
+
+/* Contenedor de cada grupo */
+#nav-sidebar-inner .hidden.mb-1\.5,
+#nav-sidebar-inner .hidden.mb-2 {
+    border-top: 1px solid oklch(42% 0.07 260) !important;
+    padding-top: 4px !important;
+    margin-top: 0 !important;
+}
+
+/* Ocultar el <hr> interno que ya existe para no duplicar */
+#nav-sidebar-inner .hidden.mb-1\.5 hr,
+#nav-sidebar-inner .hidden.mb-2 hr {
+    display: none !important;
+}
+
+/* Headers de grupo — alineados como en la imagen */
+#nav-sidebar-inner h2 {
+    color: oklch(96% 0.015 260) !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.01em !important;
+    text-transform: none !important;
+    padding: 8px 12px !important;
+    margin: 0 !important;
+}

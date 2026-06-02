@@ -1,0 +1,23 @@
+# Entorno virtual
+.venv
+
+# uv
+.python-version
+uv.lock
+
+# Variables de entorno
+.env
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+
+# Django
+*.sqlite3
+staticfiles/
+media/
+
+# IDE
+.vscode/
+.idea/

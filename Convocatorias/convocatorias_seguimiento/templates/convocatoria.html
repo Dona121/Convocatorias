@@ -1,0 +1,214 @@
+{% extends "unfold/layouts/base.html" %}
+{% load static %}
+{% load unfold %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/convocatorias.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+    <section class="hero-convocatoria">
+        <div class="space-y-10">
+
+            <div>
+                <h1 class="hero-title">
+                    {{ convocatoria.nombre_convocatoria }}
+                </h1>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+
+                <div class="kpi-card">
+                    <p class="kpi-title">Apertura</p>
+                    <p class="kpi-value">
+                        {% if convocatoria.fecha_apertura %}
+                            {{ convocatoria.fecha_apertura|date:"d M Y" }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="kpi-card">
+                    <p class="kpi-title">Cierre</p>
+                    <p class="kpi-value">
+                        {% if convocatoria.fecha_cierre %}
+                            {{ convocatoria.fecha_cierre|date:"d M Y" }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="kpi-card">
+                    <p class="kpi-title">Estado monto</p>
+                    <p class="kpi-value">
+                        {% if convocatoria.estado_monto == "ES" %}
+                            Especificado
+                        {% else %}
+                            No especificado
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="kpi-card">
+                    <p class="kpi-title">Valor</p>
+                    <p class="kpi-value">
+                        {% if convocatoria.monto %}
+                            $ {{ convocatoria.monto }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="flex flex-wrap gap-5 pt-3">
+                <a href="{% url 'admin:contenido_convocatorias_change' convocatoria.id %}" target="_self" class="btn-convocatoria btn-primary">
+                    Ver convocatoria
+                </a>
+
+                {% if convocatoria.enlace_del_actor %}
+                <a href="{{ convocatoria.enlace_del_actor }}" target="_blank" class="btn-convocatoria btn-outline">
+                    Sitio del actor
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </section>
+
+    <section class="tabs-container">
+        <div class="tab-item active">
+            Información general
+        </div>
+    </section>
+
+    <!-- ====================================================
+         CARD RESUMEN
+    ===================================================== -->
+    <section class="card-section">
+        <div class="card-header">
+            <h2 class="card-title">Resumen de la convocatoria</h2>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Objetivo</div>
+            <div class="info-content">
+                {{ convocatoria.objetivo|default:"No especificado" }}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">¿Qué ofrece?</div>
+            <div class="info-content">
+                {{ convocatoria.que_ofrece|default:"No especificado" }}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">¿Quiénes pueden participar?</div>
+            <div class="info-content">
+                {{ convocatoria.quienes_pueden_participar|default:"No especificado" }}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Público priorizado</div>
+            <div class="info-content">
+                {{ convocatoria.publico_priorizado|default:"No especificado" }}
+            </div>
+        </div>
+
+        {% if convocatoria.observaciones_monto %}
+        <div class="info-row">
+            <div class="info-label">Observaciones del monto</div>
+            <div class="info-content">
+                {{ convocatoria.observaciones_monto }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="info-row">
+            <div class="info-label">Contacto</div>
+            <div class="info-content">
+                {% if convocatoria.contacto %}
+                    <a href="mailto:{{ convocatoria.contacto }}" class="info-link">
+                        {{ convocatoria.contacto }}
+                    </a>
+                {% else %}
+                    No especificado
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Sectores</div>
+            <div class="info-content">
+                {% for sector in convocatoria.sectores.all %}
+                    <span class="badge badge-green">
+                        <span class="badge-code">{{ sector.codigo_sector }}</span>
+                        {{ sector.sector }}
+                    </span>
+                {% empty %}
+                    No especificado
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Segmentos</div>
+            <div class="info-content">
+                {% for seg in convocatoria.segmento.all %}
+                    <span class="badge badge-blue">{{ seg }}</span>
+                {% empty %}
+                    No especificado
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Ubicación</div>
+            <div class="info-content">
+                {% for ub in convocatoria.ubicacion.all %}
+                    <span class="badge badge-blue">{{ ub }}</span>
+                {% empty %}
+                    No especificado
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Dependencias</div>
+            <div class="info-content">
+                {% for dependencia in convocatoria.dependencia.all %}
+                    <span class="badge badge-blue">{{ dependencia }}</span>
+                {% empty %}
+                    No especificado
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Aliados</div>
+            <div class="info-content">
+                {% for aliado in convocatoria.aliados.all %}
+                    <span class="badge badge-green">
+                        {% if aliado.clasificacion %}
+                            <span class="badge-code">{{ aliado.clasificacion }}</span>
+                        {% endif %}
+                        {{ aliado }}
+                    </span>
+                {% empty %}
+                    No especificado
+                {% endfor %}
+            </div>
+        </div>
+
+    </section>
+
+</div>
+{% endblock %}
