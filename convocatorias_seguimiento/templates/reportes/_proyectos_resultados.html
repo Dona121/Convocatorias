@@ -1,0 +1,109 @@
+{% load static %}
+{{ chart_vigencia|json_script:"c-vig-data" }}
+{{ chart_fuente|json_script:"c-fue-data" }}
+{{ chart_benef|json_script:"c-ben-data" }}
+
+<!-- Gráficos -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+  <div class="card p-5">
+    <div class="card-title mb-3">Comprometido vs pagado por vigencia</div>
+    <div class="h-60"><canvas id="c-vig"></canvas></div>
+  </div>
+  <div class="card p-5">
+    <div class="card-title mb-3">Comprometido vs pagado por fuente</div>
+    <div class="h-60"><canvas id="c-fue"></canvas></div>
+  </div>
+  <div class="card p-5 md:col-span-2">
+    <div class="card-title mb-3">Beneficiarios por tipo</div>
+    <div class="h-56"><canvas id="c-ben"></canvas></div>
+  </div>
+</div>
+
+<!-- Tabla -->
+<div class="card overflow-hidden">
+  <div class="flex items-center justify-between px-5 py-4 border-b border-gris-claro">
+    <span class="card-title">Proyectos</span>
+    <span class="kpi-label">{{ total }} resultado{{ total|pluralize }}</span>
+  </div>
+
+  {% if filas %}
+  <div class="overflow-x-auto">
+    <table class="std">
+      <thead>
+        <tr>
+          <th>Proyecto</th>
+          <th>Etapa</th>
+          <th>Convocatoria</th>
+          <th>Dependencia</th>
+          <th>Responsable</th>
+          <th>BPIN</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td class="max-w-xs">
+            <a href="{% url 'reportes:proyecto_detalle' fila.obj.id %}" class="font-semibold text-gris-oscuro hover:text-verde trunc-2" title="{{ fila.obj.nombre_proyecto }}">{{ fila.obj.nombre_proyecto }}</a>
+          </td>
+          <td><span class="badge badge--{{ fila.etapa.tono }}">{{ fila.etapa.label }}</span></td>
+          <td class="max-w-xs">
+            {% if fila.obj.convocatoria %}
+              <a href="{% url 'reportes:convocatoria_detalle' fila.obj.convocatoria.id %}" class="enlace trunc-2" title="{{ fila.obj.convocatoria.nombre_convocatoria }}">{{ fila.obj.convocatoria.nombre_convocatoria }}</a>
+            {% else %}<span class="text-gris-medio">—</span>{% endif %}
+          </td>
+          <td>{{ fila.obj.dependencia.dependencia|default:"—" }}</td>
+          <td>{{ fila.obj.responsable.responsable|default:"—" }}</td>
+          <td class="whitespace-nowrap">{{ fila.obj.bpin|default:"—" }}</td>
+          <td class="text-right"><a href="{% url 'reportes:proyecto_detalle' fila.obj.id %}" class="enlace whitespace-nowrap">Ver →</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="px-5 py-14 text-center">
+    <p class="font-semibold text-gris-oscuro">No hay proyectos que coincidan con los filtros.</p>
+    <p class="text-sm text-gris-medio mt-1">Ajusta o limpia los filtros para ver más resultados.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  (function () {
+    if (typeof Chart === "undefined") return;
+    var cop = { ticks: { callback: function (v) { return window.fmtCOP(v); } } };
+    var tip = { callbacks: { label: function (ctx) { return ctx.dataset.label + ": " + window.fmtCOP(ctx.parsed.y); } } };
+
+    var v = jdata("c-vig-data");
+    makeChart("c-vig", {
+      type: "bar",
+      data: { labels: v.labels, datasets: [
+        { label: "Comprometido", data: v.comprometido, backgroundColor: "#109d39", borderRadius: 4 },
+        { label: "Pagado", data: v.pagado, backgroundColor: "#0b72ab", borderRadius: 4 } ] },
+      options: { responsive: true, maintainAspectRatio: false,
+                 plugins: { legend: { position: "bottom" }, tooltip: tip },
+                 scales: { y: { beginAtZero: true, ticks: cop.ticks } } }
+    });
+
+    var f = jdata("c-fue-data");
+    makeChart("c-fue", {
+      type: "bar",
+      data: { labels: f.labels, datasets: [
+        { label: "Comprometido", data: f.comprometido, backgroundColor: "#109d39", borderRadius: 4 },
+        { label: "Pagado", data: f.pagado, backgroundColor: "#0b72ab", borderRadius: 4 } ] },
+      options: { responsive: true, maintainAspectRatio: false,
+                 plugins: { legend: { position: "bottom" }, tooltip: tip },
+                 scales: { y: { beginAtZero: true, ticks: cop.ticks } } }
+    });
+
+    var b = jdata("c-ben-data");
+    makeChart("c-ben", {
+      type: "bar",
+      data: { labels: b.labels, datasets: [{ label: "Beneficiarios", data: b.data, backgroundColor: "#d88c16", borderRadius: 4 }] },
+      options: { indexAxis: "y", responsive: true, maintainAspectRatio: false,
+                 plugins: { legend: { display: false } },
+                 scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+  })();
+</script>

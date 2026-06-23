@@ -1,0 +1,86 @@
+{% extends "reportes/base.html" %}
+{% load static %}
+{% block title %}Proyectos{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
+
+  <aside x-data="{ abierto: false }">
+    <!-- En móvil los filtros se colapsan; en escritorio siempre visibles. -->
+    <button type="button" @click="abierto = !abierto"
+            class="btn btn-borde w-full justify-between lg:hidden mb-3">
+      <span class="font-bold">Filtros</span>
+      <span class="text-xs text-gris-medio" x-text="abierto ? 'Ocultar ▲' : 'Mostrar ▼'"></span>
+    </button>
+    <form class="card p-5 lg:sticky lg:top-4 space-y-4 hidden lg:block"
+          :class="{ 'is-open': abierto }"
+          hx-get="{% url 'reportes:proyectos' %}"
+          hx-target="#resultados"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-trigger="change, submit"
+          hx-indicator="#resultados">
+      <div class="flex items-center justify-between">
+        <span class="card-title">Filtros</span>
+        <a href="{% url 'reportes:proyectos' %}" class="enlace text-xs">Limpiar</a>
+      </div>
+
+      <div>
+        <label class="campo-label">Etapa</label>
+        <select name="etapa" class="campo">
+          <option value="">Todas</option>
+          {% for clave, info in etapas_choices.items %}
+            <option value="{{ clave }}" {% if filtros.etapa == clave %}selected{% endif %}>{{ info.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Convocatoria</label>
+        <select name="convocatoria" class="campo">
+          <option value="">Todas</option>
+          {% for c in opciones.convocatorias %}
+            <option value="{{ c.id }}" {% if filtros.convocatoria == c.id|stringformat:'s' %}selected{% endif %}>{{ c.nombre_convocatoria|truncatechars:50 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Dependencia</label>
+        <select name="dependencia" class="campo">
+          <option value="">Todas</option>
+          {% for d in opciones.dependencias %}
+            <option value="{{ d.id }}" {% if filtros.dependencia == d.id|stringformat:'s' %}selected{% endif %}>{{ d.dependencia }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Responsable</label>
+        <select name="responsable" class="campo">
+          <option value="">Todos</option>
+          {% for r in opciones.responsables %}
+            <option value="{{ r.id }}" {% if filtros.responsable == r.id|stringformat:'s' %}selected{% endif %}>{{ r.responsable }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Municipio</label>
+        <select name="municipio" class="campo">
+          <option value="">Todos</option>
+          {% for m in opciones.municipios %}
+            <option value="{{ m.id }}" {% if filtros.municipio == m.id|stringformat:'s' %}selected{% endif %}>{{ m.municipio }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <noscript><button type="submit" class="btn btn-primario w-full justify-center">Aplicar filtros</button></noscript>
+    </form>
+  </aside>
+
+  <section id="resultados" style="opacity:1">
+    {% include "reportes/_proyectos_resultados.html" %}
+  </section>
+</div>
+{% endblock %}

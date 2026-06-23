@@ -1,0 +1,89 @@
+{% extends "reportes/base.html" %}
+{% load static %}
+{% block title %}{{ p.nombre_proyecto|truncatechars:40 }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'reportes:proyectos' %}" class="enlace text-sm">← Volver a proyectos</a>
+
+<div class="card p-6 mt-3 mb-6">
+  <span class="badge badge--{{ etapa.tono }} mb-3">{{ etapa.label }}</span>
+  <h1 class="text-2xl font-extrabold text-gris-oscuro leading-tight tracking-tight">{{ p.nombre_proyecto }}</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+    <div><p class="kpi-label">BPIN</p><p class="font-bold text-lg">{{ p.bpin|default:"—" }}</p></div>
+    <div><p class="kpi-label">Dependencia</p><p class="font-bold">{{ p.dependencia.dependencia|default:"—" }}</p></div>
+    <div><p class="kpi-label">Responsable</p><p class="font-bold">{{ p.responsable.responsable|default:"—" }}</p></div>
+    <div>
+      <p class="kpi-label">Convocatoria</p>
+      {% if p.convocatoria %}
+        <a href="{% url 'reportes:convocatoria_detalle' p.convocatoria.id %}" class="enlace">{{ p.convocatoria.nombre_convocatoria|truncatechars:40 }}</a>
+      {% else %}<p class="font-bold">—</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-2 mt-5">
+    {% for m in p.municipios.all %}<span class="badge badge--gris">{{ m.municipio }}</span>{% endfor %}
+    {% for a in p.aliados.all %}<span class="badge badge--azul">{{ a.aliado }}</span>{% endfor %}
+  </div>
+
+  {% if etapa_clave == 'sin_fechas' %}
+    <div class="mt-5 text-sm rounded-md px-4 py-3" style="background:#fff5e0;color:#a36a00;border:1px solid var(--naranja)">
+      Este proyecto no tiene fechas del proceso registradas, por lo que no se puede determinar su etapa.
+    </div>
+  {% endif %}
+</div>
+
+<!-- Avance del proceso (fechas) -->
+<div class="card p-6 mb-6">
+  <div class="card-title mb-4">Avance del proceso</div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+    <div><p class="kpi-label">Postulación</p><p>{{ p.fecha_envio_postulacion_proyecto|date:"d M Y"|default:"—" }}</p></div>
+    <div><p class="kpi-label">Solicitud subsanación</p><p>{{ p.fecha_solicitud_subsanacion_proyecto|date:"d M Y"|default:"—" }}</p></div>
+    <div><p class="kpi-label">Envío subsanación</p><p>{{ p.fecha_envio_subsanciones_proyecto|date:"d M Y"|default:"—" }}</p></div>
+    <div><p class="kpi-label">Resultados</p><p>{{ p.fecha_publicacion_resultados_proyecto|date:"d M Y"|default:"—" }}</p></div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+  <!-- Financiación -->
+  <div class="card p-5">
+    <div class="card-title mb-3">Financiación</div>
+    <div class="flex gap-5 mb-3">
+      <div><p class="kpi-label">Comprometido</p><p class="font-bold text-verde text-lg">{{ comprometido_fmt }}</p></div>
+      <div><p class="kpi-label">Pagado</p><p class="font-bold text-azul text-lg">{{ pagado_fmt }}</p></div>
+    </div>
+    {% for ff in fuentes %}
+      <p class="text-sm border-t border-gris-claro pt-2 mt-2">
+        <span class="font-semibold">{{ ff.fuente.fuente }}</span>
+        <span class="text-gris-medio">· {{ ff.vigencia.vigencia }}</span>
+      </p>
+    {% empty %}
+      <p class="text-xs text-gris-medio">Sin fuentes registradas.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Beneficiarios -->
+  <div class="card p-5">
+    <div class="card-title mb-3">Beneficiarios</div>
+    {% for b in beneficiarios %}
+      <p class="text-sm py-1"><span class="font-semibold">{{ b.numero_beneficiarios }}</span> <span class="text-gris-medio">{{ b.beneficiario.tipo_beneficiario }}</span></p>
+    {% empty %}
+      <p class="text-xs text-gris-medio">Sin beneficiarios registrados.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Indicadores MGA -->
+  <div class="card p-5">
+    <div class="card-title mb-3">Indicadores MGA</div>
+    {% for ind in indicadores %}
+      <p class="text-sm py-1 border-t border-gris-claro first:border-0 pt-2">
+        <span class="font-semibold">{{ ind.meta_proyecto }}</span>
+        <span class="text-gris-medio">· {{ ind.indicadores.codigo_indicador }} ({{ ind.vigencia.vigencia }})</span><br>
+        <span class="text-xs text-gris-medio">{{ ind.indicadores.nombre_indicador|truncatechars:70 }}</span>
+      </p>
+    {% empty %}
+      <p class="text-xs text-gris-medio">Sin indicadores registrados.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Seguimiento de Convocatorias{% endblock %} · Gobernación de Sucre</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Librerías vendorizadas (sin CDN en runtime) -->
+    <script src="{% static 'vendor/tailwind.min.js' %}"></script>
+    <script src="{% static 'vendor/chart.umd.min.js' %}"></script>
+    <script src="{% static 'vendor/htmx.min.js' %}"></script>
+    <script defer src="{% static 'vendor/alpine.min.js' %}"></script>
+
+    <script>
+      tailwind.config = {
+        theme: { extend: {
+          fontFamily: { sans: ['Montserrat', 'Helvetica Neue', 'Arial', 'sans-serif'] },
+          colors: {
+            verde: '#109d39', 'verde-claro': '#e3f4ea', 'verde-sup': '#0e4d2a',
+            'verde-sup2': '#08321b', azul: '#0b72ab', rojo: '#d92a34',
+            naranja: '#ffa700', ambar: '#d88c16',
+            'gris-oscuro': '#5a595d', 'gris-medio': '#686868',
+            'gris-claro': '#dfe0e1', 'gris-fondo': '#f5f6f7',
+          },
+        }},
+      }
+    </script>
+
+    <!-- Helpers de gráficos: definidos en <head> para que existan ANTES de que
+         se ejecute el <script> del parcial en la carga inicial. -->
+    <script>
+      window._charts = window._charts || {};
+      window.makeChart = function (id, config) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (window._charts[id]) window._charts[id].destroy();
+        Chart.defaults.font.family = "Montserrat, sans-serif";
+        Chart.defaults.color = "#686868";
+        window._charts[id] = new Chart(el, config);
+      };
+      window.jdata = function (id) { return JSON.parse(document.getElementById(id).textContent); };
+      window.fmtCOP = function (v) { return "$ " + Math.round(v || 0).toLocaleString("es-CO"); };
+    </script>
+
+    <style>
+      :root {
+        --verde-primario:#109d39; --verde-claro:#e3f4ea;
+        --verde-superficie:#0e4d2a; --verde-superficie-2:#08321b;
+        --azul:#0b72ab; --rojo:#d92a34; --naranja:#ffa700; --ambar:#d88c16;
+        --gris-oscuro:#5a595d; --gris-medio:#686868; --gris-claro:#dfe0e1;
+        --gris-fondo:#f5f6f7; --blanco:#fff;
+        --radio-base:6px;
+        --sombra-suave:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05);
+        --sombra-foco:0 0 0 3px rgba(16,157,57,.20);
+        --transicion:220ms cubic-bezier(.4,0,.2,1);
+      }
+      * { box-sizing:border-box; }
+      body { margin:0; font-family:'Montserrat','Helvetica Neue',Arial,sans-serif;
+             background:var(--gris-fondo); color:var(--gris-oscuro); }
+
+      /* Masthead */
+      .masthead { background:linear-gradient(180deg,var(--verde-superficie),var(--verde-superficie-2)); color:#fff; }
+      .nav-tab { padding:14px 4px; font-weight:600; font-size:14px; color:rgba(255,255,255,.72);
+                 border-bottom:3px solid transparent; transition:var(--transicion); }
+      .nav-tab:hover { color:#fff; }
+      .nav-tab.activa { color:#fff; border-bottom-color:var(--naranja); }
+
+      /* Tarjetas */
+      .card { background:var(--blanco); border:1px solid var(--gris-claro);
+              border-radius:var(--radio-base); box-shadow:var(--sombra-suave); }
+      .card-title { display:flex; align-items:center; gap:10px; font-size:15px; font-weight:700;
+                    color:var(--gris-oscuro); }
+      .card-title::before { content:""; width:4px; height:18px; border-radius:2px;
+                            background:var(--verde-primario); flex:none; }
+
+      /* KPI */
+      .kpi-valor { font-size:28px; font-weight:800; line-height:1.1; color:var(--gris-oscuro); }
+      .kpi-label { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+                   color:var(--gris-medio); }
+
+      /* Tabla */
+      table.std { width:100%; border-collapse:collapse; font-size:13px; }
+      table.std thead th { background:var(--verde-superficie); color:#fff; text-align:left;
+                           font-weight:600; font-size:11px; letter-spacing:.04em; text-transform:uppercase;
+                           padding:10px 14px; position:sticky; top:0; }
+      table.std tbody td { padding:11px 14px; border-bottom:1px solid var(--gris-claro);
+                           vertical-align:middle; }
+      table.std tbody tr:hover { background:var(--verde-claro); }
+
+      /* Badges de estado/etapa */
+      .badge { display:inline-flex; align-items:center; gap:6px; padding:3px 10px;
+               border-radius:999px; font-size:11.5px; font-weight:600; white-space:nowrap; }
+      .badge::before { content:""; width:7px; height:7px; border-radius:999px; background:currentColor; opacity:.9; }
+      .badge--verde { background:var(--verde-claro); color:#0e6b29; }
+      .badge--azul  { background:rgba(11,114,171,.12); color:#0b6090; }
+      .badge--rojo  { background:#fdecee; color:#b21f28; }
+      .badge--ambar { background:#fff5e0; color:#a36a00; }
+      .badge--gris  { background:#eceded; color:var(--gris-medio); }
+
+      /* Botones / enlaces */
+      .btn { display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:13px;
+             padding:9px 16px; border-radius:var(--radio-base); border:1px solid transparent;
+             cursor:pointer; transition:var(--transicion); text-decoration:none; }
+      .btn-primario { background:var(--verde-primario); color:#fff; }
+      .btn-primario:hover { filter:brightness(1.06); }
+      .btn-borde { background:#fff; border-color:var(--gris-claro); color:var(--gris-oscuro); }
+      .btn-borde:hover { background:var(--gris-fondo); }
+      .enlace { color:var(--azul); font-weight:600; text-decoration:none; }
+      .enlace:hover { text-decoration:underline; }
+
+      /* Inputs de filtro */
+      .campo { width:100%; font-family:inherit; font-size:13px; color:var(--gris-oscuro);
+               background:#fff; border:1px solid var(--gris-claro); border-radius:var(--radio-base);
+               padding:8px 10px; transition:var(--transicion); }
+      .campo:focus { outline:none; border-color:var(--verde-primario); box-shadow:var(--sombra-foco); }
+      .campo-label { display:block; font-size:11px; font-weight:600; letter-spacing:.04em;
+                     text-transform:uppercase; color:var(--gris-medio); margin-bottom:5px; }
+
+      /* Limita nombres largos a 2 líneas con elipsis (evita filas muy altas) */
+      .trunc-2 { display:-webkit-box; -webkit-line-clamp:2; line-clamp:2;
+                 -webkit-box-orient:vertical; overflow:hidden; }
+
+      /* Panel de filtros desplegado en móvil (clase propia: no depende del JIT
+         de Tailwind para clases en bindings dinámicos de Alpine). */
+      .is-open { display:block !important; }
+
+      [x-cloak] { display:none !important; }
+      .htmx-request .cargando { opacity:1 !important; }
+      .cargando { opacity:0; transition:opacity .15s; }
+    </style>
+    {% block extrahead %}{% endblock %}
+</head>
+<body>
+    <!-- ===================== MASTHEAD ===================== -->
+    <header class="masthead">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex items-center gap-4 py-4">
+          <img src="{% static 'logos/2025_solo-blanco_logo-gob-Sucre_oficial_1.png' %}"
+               alt="Gobernación de Sucre" class="h-11 w-auto">
+          <div>
+            <h1 class="text-white font-extrabold text-lg leading-tight tracking-tight">Seguimiento de Convocatorias</h1>
+            <p class="text-white/70 text-xs font-medium">Gobernación de Sucre · Consulta pública</p>
+          </div>
+        </div>
+        <nav class="flex gap-7">
+          <a href="{% url 'reportes:convocatorias' %}"
+             class="nav-tab {% if seccion == 'convocatorias' %}activa{% endif %}">Convocatorias</a>
+          <a href="{% url 'reportes:proyectos' %}"
+             class="nav-tab {% if seccion == 'proyectos' %}activa{% endif %}">Proyectos</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-7">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-xs text-gris-medio">
+      Información de consulta pública · Gobernación de Sucre. Los datos se administran internamente.
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

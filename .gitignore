@@ -1,0 +1,74 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Cachés de herramientas (tests, linters, type-checkers, cobertura)
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.cache/
+
+# ---------------------------------------------------------------------------
+# Entornos virtuales
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# ---------------------------------------------------------------------------
+# Django
+# ---------------------------------------------------------------------------
+*.log
+*.pot
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
+
+# Estáticos colectados (se regeneran con `collectstatic`)
+staticfiles/
+
+# Archivos subidos por usuarios (ImageField, etc.)
+media/
+
+# ---------------------------------------------------------------------------
+# Secretos / configuración local
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Editores / IDE
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code (configuración local de la máquina)
+.claude/settings.local.json
+
+# ---------------------------------------------------------------------------
+# Sistema operativo / sincronización
+# ---------------------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+# MEGA sync
+.megaignore
+*.mega

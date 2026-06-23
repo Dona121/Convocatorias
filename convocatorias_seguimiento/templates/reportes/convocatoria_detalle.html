@@ -1,0 +1,117 @@
+{% extends "reportes/base.html" %}
+{% load static %}
+{% block title %}{{ convocatoria.nombre_convocatoria|truncatechars:40 }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'reportes:convocatorias' %}" class="enlace text-sm">← Volver a convocatorias</a>
+
+<!-- Cabecera -->
+<div class="card p-6 mt-3 mb-6">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="max-w-3xl">
+      <span class="badge badge--{{ estado.tono }} mb-3">{{ estado.label }}</span>
+      <h1 class="text-2xl font-extrabold text-gris-oscuro leading-tight tracking-tight">{{ convocatoria.nombre_convocatoria }}</h1>
+      {% if convocatoria.objetivo %}<p class="mt-3 text-sm leading-relaxed">{{ convocatoria.objetivo }}</p>{% endif %}
+    </div>
+    {% if convocatoria.imagen_convocatoria %}
+      <img src="{{ convocatoria.imagen_convocatoria.url }}" alt="" class="h-24 w-24 object-cover rounded-md border border-gris-claro">
+    {% endif %}
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+    <div><p class="kpi-label">Apertura</p><p class="kpi-valor text-lg">{{ convocatoria.fecha_apertura|date:"d M Y"|default:"—" }}</p></div>
+    <div><p class="kpi-label">Cierre</p><p class="kpi-valor text-lg">{{ convocatoria.fecha_cierre|date:"d M Y"|default:"—" }}</p></div>
+    <div><p class="kpi-label">Monto</p><p class="kpi-valor text-lg">{% if monto_fmt %}{{ monto_fmt }}{% elif convocatoria.estado_monto == 'NE' %}No especifica{% else %}—{% endif %}</p></div>
+    <div><p class="kpi-label">Proyectos</p><p class="kpi-valor text-lg">{{ proyectos|length }}</p></div>
+  </div>
+
+  {% if not convocatoria.fecha_apertura or not convocatoria.fecha_cierre %}
+    <div class="mt-4 text-sm rounded-md px-4 py-3" style="background:#fff5e0;color:#a36a00;border:1px solid var(--naranja)">
+      Esta convocatoria tiene fechas incompletas; el estado no puede calcularse con precisión.
+    </div>
+  {% endif %}
+
+  <div class="flex flex-wrap gap-2 mt-5">
+    {% for d in convocatoria.dependencia.all %}<span class="badge badge--gris">{{ d.dependencia }}</span>{% endfor %}
+    {% for s in convocatoria.segmento.all %}<span class="badge badge--azul">{{ s.segmento }}</span>{% endfor %}
+    {% for s in convocatoria.sectores.all %}<span class="badge badge--gris">{{ s.codigo_sector }} · {{ s.sector }}</span>{% endfor %}
+    {% for u in convocatoria.ubicacion.all %}<span class="badge badge--gris">{{ u.ubicacion }}</span>{% endfor %}
+  </div>
+
+  {% if convocatoria.enlace_convocatoria or convocatoria.contacto %}
+  <div class="flex flex-wrap gap-4 mt-5 text-sm">
+    {% if convocatoria.enlace_convocatoria %}<a href="{{ convocatoria.enlace_convocatoria }}" target="_blank" rel="noopener" class="enlace">Sitio de la convocatoria ↗</a>{% endif %}
+    {% if convocatoria.contacto %}<a href="mailto:{{ convocatoria.contacto }}" class="enlace">{{ convocatoria.contacto }}</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<!-- Proyectos postulados -->
+<div class="flex items-center justify-between mb-3">
+  <span class="card-title">Proyectos ({{ proyectos|length }})</span>
+</div>
+
+{% if proyectos %}
+<div class="space-y-5">
+  {% for pd in proyectos %}
+  <div class="card p-5">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <span class="badge badge--{{ pd.etapa.tono }} mb-2">{{ pd.etapa.label }}</span>
+        <h2 class="font-bold text-gris-oscuro">{{ pd.obj.nombre_proyecto }}</h2>
+        <p class="text-xs text-gris-medio mt-1">
+          {% if pd.obj.bpin %}BPIN {{ pd.obj.bpin }} · {% endif %}
+          {{ pd.obj.dependencia.dependencia|default:"Sin dependencia" }} · {{ pd.obj.responsable.responsable|default:"Sin responsable" }}
+        </p>
+      </div>
+      <a href="{% url 'reportes:proyecto_detalle' pd.obj.id %}" class="enlace whitespace-nowrap">Abrir proyecto →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
+      <!-- Fuentes -->
+      <div>
+        <p class="kpi-label mb-2">Financiación</p>
+        <div class="flex gap-4 mb-2">
+          <div><span class="text-xs text-gris-medio">Comprometido</span><br><span class="font-bold text-verde">{{ pd.comprometido_fmt }}</span></div>
+          <div><span class="text-xs text-gris-medio">Pagado</span><br><span class="font-bold text-azul">{{ pd.pagado_fmt }}</span></div>
+        </div>
+        {% for ff in pd.fuentes %}
+          <p class="text-xs text-gris-medio">· {{ ff.fuente.fuente }} ({{ ff.vigencia.vigencia }})</p>
+        {% empty %}
+          <p class="text-xs text-gris-medio">Sin fuentes registradas.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Beneficiarios -->
+      <div>
+        <p class="kpi-label mb-2">Beneficiarios</p>
+        {% for b in pd.beneficiarios %}
+          <p class="text-sm"><span class="font-semibold">{{ b.numero_beneficiarios }}</span> <span class="text-gris-medio">{{ b.beneficiario.tipo_beneficiario }}</span></p>
+        {% empty %}
+          <p class="text-xs text-gris-medio">Sin beneficiarios registrados.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Indicadores MGA -->
+      <div>
+        <p class="kpi-label mb-2">Indicadores MGA</p>
+        {% for ind in pd.indicadores %}
+          <p class="text-sm"><span class="font-semibold">{{ ind.meta_proyecto }}</span> <span class="text-gris-medio">{{ ind.indicadores.codigo_indicador }} · {{ ind.indicadores.nombre_indicador|truncatechars:50 }}</span></p>
+        {% empty %}
+          <p class="text-xs text-gris-medio">Sin indicadores registrados.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if pd.etapa_clave == 'sin_fechas' %}
+      <p class="text-xs mt-4" style="color:#a36a00">Este proyecto no tiene fechas del proceso registradas.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card px-5 py-14 text-center">
+  <p class="font-semibold text-gris-oscuro">Esta convocatoria aún no tiene proyectos registrados.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,109 @@
+{% load static %}
+{{ chart_dona|json_script:"c-dona-data" }}
+{{ chart_barras|json_script:"c-barras-data" }}
+{{ chart_embudo|json_script:"c-embudo-data" }}
+
+<!-- Gráficos -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+  <div class="card p-5">
+    <div class="card-title mb-3">Convocatorias por estado</div>
+    <div class="h-56"><canvas id="c-dona"></canvas></div>
+  </div>
+  <div class="card p-5">
+    <div class="card-title mb-3">Convocatorias por nº de proyectos</div>
+    <div class="h-56"><canvas id="c-barras"></canvas></div>
+  </div>
+  <div class="card p-5">
+    <div class="card-title mb-3">Proyectos por etapa</div>
+    <div class="h-56"><canvas id="c-embudo"></canvas></div>
+  </div>
+</div>
+
+<!-- Tabla -->
+<div class="card overflow-hidden">
+  <div class="flex items-center justify-between px-5 py-4 border-b border-gris-claro">
+    <span class="card-title">Convocatorias</span>
+    <span class="kpi-label">{{ total }} resultado{{ total|pluralize }}</span>
+  </div>
+
+  {% if filas %}
+  <div class="overflow-x-auto">
+    <table class="std">
+      <thead>
+        <tr>
+          <th>Convocatoria</th>
+          <th>Estado</th>
+          <th>Apertura</th>
+          <th>Cierre</th>
+          <th>Monto</th>
+          <th class="text-right">Postulados</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td class="max-w-md">
+            <a href="{% url 'reportes:convocatoria_detalle' fila.obj.id %}" class="font-semibold text-gris-oscuro hover:text-verde trunc-2" title="{{ fila.obj.nombre_convocatoria }}">
+              {{ fila.obj.nombre_convocatoria }}
+            </a>
+          </td>
+          <td>
+            <span class="badge badge--{{ fila.estado.tono }}">{{ fila.estado.label }}</span>
+          </td>
+          <td class="whitespace-nowrap">{{ fila.obj.fecha_apertura|date:"d M Y"|default:"—" }}</td>
+          <td class="whitespace-nowrap">{{ fila.obj.fecha_cierre|date:"d M Y"|default:"—" }}</td>
+          <td class="whitespace-nowrap">
+            {% if fila.monto_fmt %}{{ fila.monto_fmt }}
+            {% elif fila.obj.estado_monto == 'NE' %}<span class="text-gris-medio">No especifica</span>
+            {% else %}—{% endif %}
+          </td>
+          <td class="text-right font-semibold">{{ fila.obj.num_postulados }} <span class="text-gris-medio font-normal">/ {{ fila.obj.num_proyectos }}</span></td>
+          <td class="text-right">
+            <a href="{% url 'reportes:convocatoria_detalle' fila.obj.id %}" class="enlace whitespace-nowrap">Ver detalle →</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="px-5 py-14 text-center">
+    <p class="font-semibold text-gris-oscuro">No hay convocatorias que coincidan con los filtros.</p>
+    <p class="text-sm text-gris-medio mt-1">Ajusta o limpia los filtros para ver más resultados.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  (function () {
+    if (typeof Chart === "undefined") return;
+    var d = jdata("c-dona-data");
+    makeChart("c-dona", {
+      type: "doughnut",
+      data: { labels: d.labels, datasets: [{ data: d.data, backgroundColor: d.colors, borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: "60%",
+                 plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 11 } } } } }
+    });
+
+    var b = jdata("c-barras-data");
+    makeChart("c-barras", {
+      type: "bar",
+      data: { labels: b.labels, datasets: [{ label: "Convocatorias", data: b.data, backgroundColor: "#109d39", borderRadius: 4 }] },
+      options: { responsive: true, maintainAspectRatio: false,
+                 plugins: { legend: { display: false },
+                            tooltip: { callbacks: { title: function (i) { return i[0].label + " proyecto(s)"; },
+                                                    label: function (c) { return c.parsed.y + " convocatoria(s)"; } } } },
+                 scales: { y: { beginAtZero: true, ticks: { precision: 0 } },
+                           x: { title: { display: true, text: "Nº de proyectos", color: "#686868", font: { size: 10 } } } } }
+    });
+
+    var e = jdata("c-embudo-data");
+    makeChart("c-embudo", {
+      type: "bar",
+      data: { labels: e.labels, datasets: [{ label: "Proyectos", data: e.data, backgroundColor: "#0b72ab", borderRadius: 4 }] },
+      options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                 scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+  })();
+</script>

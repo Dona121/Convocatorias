@@ -1,0 +1,127 @@
+{% extends "reportes/base.html" %}
+{% load static %}
+{% block title %}Convocatorias{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
+
+  <!-- ===================== FILTROS ===================== -->
+  <aside x-data="{ abierto: false }">
+    <!-- En móvil los filtros se colapsan; en escritorio siempre visibles. -->
+    <button type="button" @click="abierto = !abierto"
+            class="btn btn-borde w-full justify-between lg:hidden mb-3">
+      <span class="font-bold">Filtros</span>
+      <span class="text-xs text-gris-medio" x-text="abierto ? 'Ocultar ▲' : 'Mostrar ▼'"></span>
+    </button>
+    <form class="card p-5 lg:sticky lg:top-4 space-y-4 hidden lg:block"
+          :class="{ 'is-open': abierto }"
+          hx-get="{% url 'reportes:convocatorias' %}"
+          hx-target="#resultados"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-trigger="change, submit"
+          hx-indicator="#resultados">
+      <div class="flex items-center justify-between">
+        <span class="card-title">Filtros</span>
+        <a href="{% url 'reportes:convocatorias' %}" class="enlace text-xs">Limpiar</a>
+      </div>
+
+      <div>
+        <label class="campo-label">Estado</label>
+        <select name="estado" class="campo">
+          <option value="">Todos</option>
+          {% for clave, info in estados_choices.items %}
+            <option value="{{ clave }}" {% if filtros.estado == clave %}selected{% endif %}>{{ info.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Monto</label>
+        <select name="estado_monto" class="campo">
+          <option value="">Cualquiera</option>
+          {% for val, etiqueta in estado_monto_choices %}
+            <option value="{{ val }}" {% if filtros.estado_monto == val %}selected{% endif %}>{{ etiqueta }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Dependencia</label>
+        <select name="dependencia" class="campo">
+          <option value="">Todas</option>
+          {% for d in opciones.dependencias %}
+            <option value="{{ d.id }}" {% if filtros.dependencia == d.id|stringformat:'s' %}selected{% endif %}>{{ d.dependencia }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Aliado</label>
+        <select name="aliado" class="campo">
+          <option value="">Todos</option>
+          {% for a in opciones.aliados %}
+            <option value="{{ a.id }}" {% if filtros.aliado == a.id|stringformat:'s' %}selected{% endif %}>{{ a.aliado }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Segmento</label>
+        <select name="segmento" class="campo">
+          <option value="">Todos</option>
+          {% for s in opciones.segmentos %}
+            <option value="{{ s.id }}" {% if filtros.segmento == s.id|stringformat:'s' %}selected{% endif %}>{{ s.segmento }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Sector</label>
+        <select name="sector" class="campo">
+          <option value="">Todos</option>
+          {% for s in opciones.sectores %}
+            <option value="{{ s.id }}" {% if filtros.sector == s.id|stringformat:'s' %}selected{% endif %}>{{ s.codigo_sector }} · {{ s.sector }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="campo-label">Ubicación</label>
+        <select name="ubicacion" class="campo">
+          <option value="">Todas</option>
+          {% for u in opciones.ubicaciones %}
+            <option value="{{ u.id }}" {% if filtros.ubicacion == u.id|stringformat:'s' %}selected{% endif %}>{{ u.ubicacion }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="campo-label">Apertura desde</label>
+          <input type="date" name="apertura_desde" value="{{ filtros.apertura_desde|default:'' }}" class="campo">
+        </div>
+        <div>
+          <label class="campo-label">Apertura hasta</label>
+          <input type="date" name="apertura_hasta" value="{{ filtros.apertura_hasta|default:'' }}" class="campo">
+        </div>
+        <div>
+          <label class="campo-label">Cierre desde</label>
+          <input type="date" name="cierre_desde" value="{{ filtros.cierre_desde|default:'' }}" class="campo">
+        </div>
+        <div>
+          <label class="campo-label">Cierre hasta</label>
+          <input type="date" name="cierre_hasta" value="{{ filtros.cierre_hasta|default:'' }}" class="campo">
+        </div>
+      </div>
+
+      <noscript><button type="submit" class="btn btn-primario w-full justify-center">Aplicar filtros</button></noscript>
+    </form>
+  </aside>
+
+  <!-- ===================== RESULTADOS ===================== -->
+  <section id="resultados" class="cargando" style="opacity:1">
+    {% include "reportes/_convocatorias_resultados.html" %}
+  </section>
+</div>
+{% endblock %}
