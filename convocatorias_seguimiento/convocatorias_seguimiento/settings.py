@@ -166,7 +166,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://chase-nondrinkable-editorially.ngrok-free.dev"
+    "https://chase-nondrinkable-editorially.ngrok-free.dev",
+    "https://convocatorias-production.up.railway.app/"
 ]
 
 
